@@ -15,6 +15,7 @@ public class Car implements Cloneable, Serializable {
 	private float currentSpeed;
 	private float time;
 	private int rpms;
+	private int rpmMax;
 	
 	public Car() {
 		// time start
@@ -110,5 +111,13 @@ public class Car implements Cloneable, Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public int getRpmMax() {
+		return rpmMax;
+	}
+
+	public void setRpmMax(int rpmMax) {
+		this.rpmMax = rpmMax;
 	}
 }
