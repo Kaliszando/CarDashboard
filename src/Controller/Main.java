@@ -1,7 +1,6 @@
 package Controller;
 
-import java.awt.EventQueue;
-
+import javax.swing.SwingUtilities;
 import Interface.MainFrame;
 
 public class Main {
@@ -9,44 +8,14 @@ public class Main {
 	public static void main(String[] args) {
 		if(args.length == 0) {
 			
-			Car c1 = new Car();
-			System.out.println(c1.getLights().toString());
-			
-			c1.getLights().toggleLeftBlinker();
-			System.out.println(c1.getLights().toString());
-			
-			c1.getLights().toggleLowBeamLights();
-			System.out.println(c1.getLights().toString());
-			
-			c1.getLights().toggleRightBlinker();
-			System.out.println(c1.getLights().toString());
-			
-			c1.getLights().toggleHazardLights();
-			System.out.println(c1.getLights().toString());
-			
-			c1.getLights().toggleHazardLights();
-			System.out.println(c1.getLights().toString());
-			
-//			EventQueue.invokeLater(new Runnable() {
-//				public void run() {
-//					try {
-//						MainFrame frame = new MainFrame();
-//						frame.setVisible(true);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-		
+			Car car = new Car();
 			
 			
-			
-			
-			
-			
-			
-			
-			
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new MainFrame(car);
+				}
+			});
 			
 		}
 		else {

@@ -28,7 +28,6 @@ public class Car implements Cloneable, Serializable {
 	
 	// Constructor
 	public Car() {
-		// time start
 		distance = 0;
 		avgFuelConsumption = 0;
 		maxSpeed = 0;
@@ -43,17 +42,17 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	// Methods
-	void start() {
+	public void start() {
 		setStartTime(LocalDateTime.now());
 		setRunning(true);
 	}
 	
-	void stop() {
+	public void stop() {
 		setStopTime(LocalDateTime.now());
 		setRunning(false);
 	}
 	
-	void calculatePeriodRunning() throws InvalidDateException {
+	public void calculatePeriodRunning() throws InvalidDateException {
 		if(stopTime == null) {
 			stopTime = LocalDateTime.now();
 		}
