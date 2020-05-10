@@ -12,10 +12,19 @@ public class Main {
 			Car c1 = new Car();
 			System.out.println(c1.getLights().toString());
 			
+			c1.getLights().toggleLeftBlinker();
+			System.out.println(c1.getLights().toString());
+			
 			c1.getLights().toggleLowBeamLights();
 			System.out.println(c1.getLights().toString());
 			
-			c1.getLights().toggleRunningLights();
+			c1.getLights().toggleRightBlinker();
+			System.out.println(c1.getLights().toString());
+			
+			c1.getLights().toggleHazardLights();
+			System.out.println(c1.getLights().toString());
+			
+			c1.getLights().toggleHazardLights();
 			System.out.println(c1.getLights().toString());
 			
 //			EventQueue.invokeLater(new Runnable() {

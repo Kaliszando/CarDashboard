@@ -14,11 +14,15 @@ public class HazardLights implements LightsInterface {
 	@Override
 	public void turnOn() {
 		this.areOn = true;
+		L.turnOn();
+		R.turnOn();
 	}
 
 	@Override
 	public void turnOff() {
 		this.areOn = false;
+		L.turnOff();
+		R.turnOff();
 	}
 
 	@Override

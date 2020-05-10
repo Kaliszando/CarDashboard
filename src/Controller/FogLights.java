@@ -22,7 +22,7 @@ public class FogLights implements LightsInterface {
 
 	@Override
 	public String status() {
-		String info = (this.isOn == true) ? "fog lights are on" : "fog lights are off";
+		String info = (this.isOn) ? "fog lights are on" : "fog lights are off";
 		return position + " " +  info;
 	}
 	

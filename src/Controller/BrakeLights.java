@@ -1,5 +1,4 @@
 package Controller;
-import java.awt.Color;
 
 public class BrakeLights implements LightsInterface {
 

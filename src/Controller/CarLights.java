@@ -22,8 +22,14 @@ public class CarLights {
 		lightsOn = false;
 	}
 	
-	void toggleLowBeamLights() {
-		if(lowBeamLights.isOn()) lowBeamLights.turnOff();
+	public void toggleLowBeamLights() {
+		if(lowBeamLights.isOn()) {
+			lowBeamLights.turnOff();
+			highBeamLights.turnOff();
+			
+			frontFogLights.turnOff();
+			rearFogLights.turnOff();
+		}
 		else {
 			lowBeamLights.turnOn();
 			runningLights.turnOff();
@@ -31,7 +37,7 @@ public class CarLights {
 		lightsOn = lowBeamLights.isOn();
 	}
 	
-	void toggleRunningLights() {
+	public void toggleRunningLights() {
 		if(runningLights.isOn()) runningLights.turnOff();
 		else {
 			runningLights.turnOn();
@@ -40,6 +46,54 @@ public class CarLights {
 		lightsOn = runningLights.isOn();
 	}
 
+	public void toggleHighBeamLights() {
+		if(highBeamLights.isOn()) {
+			highBeamLights.turnOff();
+		}
+		else if(lowBeamLights.isOn()) {
+			highBeamLights.turnOn();
+		}
+	}
+	
+	public void toggleFrontFogLigths() {
+		if(frontFogLights.isOn()) {
+			frontFogLights.turnOff();
+		}
+		else if(lowBeamLights.isOn()) {
+			frontFogLights.turnOn();
+		}
+	}
+	
+	public void toggleRearFogLigths() {
+		if(rearFogLights.isOn()) {
+			rearFogLights.turnOff();
+		}
+		else if(lowBeamLights.isOn()) {
+			rearFogLights.turnOn();
+		}
+	}
+	
+	public void toggleLeftBlinker() {
+		rightBlinker.turnOff();
+		if(leftBlinker.isOn()) leftBlinker.turnOff();
+		else leftBlinker.turnOn();
+	}
+	
+	public void toggleRightBlinker() {
+		leftBlinker.turnOff();
+		if(rightBlinker.isOn()) rightBlinker.turnOff();
+		else rightBlinker.turnOn();
+	}
+	
+	public void toggleHazardLights() {
+		if(hazardLights.isOn()) {
+			hazardLights.turnOff();
+		}
+		else {
+			hazardLights.turnOn();
+		}
+	}
+	
 	public boolean areLightsOn() {
 		return lightsOn;
 	}
@@ -50,6 +104,11 @@ public class CarLights {
 		info += runningLights.status() + "\n";
 		info += lowBeamLights.status() + "\n";
 		info += highBeamLights.status() + "\n";
+		info += leftBlinker.status() + "\n";
+		info += rightBlinker.status() + "\n";
+		info += hazardLights.status() + "\n";
+		info += frontFogLights.status() + "\n";
+		info += rearFogLights.status() + "\n";
 		return info;
 	}
 	
