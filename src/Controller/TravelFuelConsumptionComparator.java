@@ -1,6 +1,8 @@
 package Controller;
 import java.util.Comparator;
 
+import Data.Travel;
+
 public class TravelFuelConsumptionComparator implements Comparator<Travel> {
 
 	@Override

@@ -1,6 +1,9 @@
-package Controller;
+package Data;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import Controller.InvalidDateException;
+import Controller.InvalidNumberException;
 
 public class Travel implements Cloneable, Serializable {
 

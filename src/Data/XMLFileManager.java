@@ -7,8 +7,6 @@ import java.io.IOException;
 
 import com.thoughtworks.xstream.XStream;
 
-import Controller.Travel;
-
 public class XMLFileManager implements FileManagerInterface {
 
 	private XStream xs;
@@ -29,7 +27,7 @@ public class XMLFileManager implements FileManagerInterface {
 	
 	@Override
 	public Object readFromFile(String path) throws IOException, ClassNotFoundException {
-		Class<?>[] classes = new Class[] { Travel.class };
+		Class<?>[] classes = new Class[] { Data.Travel.class };
 		XStream.setupDefaultSecurity(xs);
 		xs.allowTypes(classes);
 		
