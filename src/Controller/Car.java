@@ -1,11 +1,15 @@
 package Controller;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Car implements Cloneable, Serializable {
 	
-	private static final long serialVersionUID = -2060576986212609784L;
-	
+	// Fields
+	private static final long serialVersionUID = -2060576986212609784L;	
 	private float mileageTotal;	// przebieg całkowity
 	private float mileage1;		// przebieg dzienny 1 i 2, można wyzerować
 	private float mileage2;
@@ -13,10 +17,15 @@ public class Car implements Cloneable, Serializable {
 	private float avgFuelConsumption;
 	private float maxSpeed;
 	private float currentSpeed;
-	private float time;
 	private int rpms;
 	private int rpmMax;
+	private LocalDateTime startTime;
+	private LocalDateTime stopTime;
+	private LocalTime totalTime;
+	private DateTimeFormatter timeFormat;
+	private boolean isRunning;
 	
+	// Constructor
 	public Car() {
 		// time start
 		distance = 0;
@@ -27,8 +36,37 @@ public class Car implements Cloneable, Serializable {
 		mileageTotal = 0;
 		mileage1 = 0;
 		mileage2 = 0;
+		
+		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+	}
+	
+	// Methods
+	void start() {
+		setStartTime(LocalDateTime.now());
+		setRunning(true);
+	}
+	
+	void stop() {
+		setStopTime(LocalDateTime.now());
+		setRunning(false);
+	}
+	
+	void calculatePeriodRunning() throws InvalidDateException {
+		if(stopTime == null) {
+			stopTime = LocalDateTime.now();
+		}
+		else if(startTime == null) {
+			throw new InvalidDateException();
+		}
+		else {
+			Duration duration = Duration.between(startTime, stopTime);
+			long timeInSec = duration.getSeconds();
+			totalTime = LocalTime.of((int)timeInSec/360, (int)timeInSec/60, (int)timeInSec);
+			System.out.println(totalTime.toString());
+		}
 	}
 
+	// Getters, Setters
 	public float getMileageTotal() {
 		return mileageTotal;
 	}
@@ -93,14 +131,6 @@ public class Car implements Cloneable, Serializable {
 		this.currentSpeed = currentSpeed;
 	}
 
-	public float getTime() {
-		return time;
-	}
-
-	public void setTime(float time) {
-		this.time = time;
-	}
-
 	public int getRpms() {
 		return rpms;
 	}
@@ -119,5 +149,29 @@ public class Car implements Cloneable, Serializable {
 
 	public void setRpmMax(int rpmMax) {
 		this.rpmMax = rpmMax;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	public String getStartTime() {
+		return startTime.format(timeFormat);
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getStopTime() {
+		return stopTime.format(timeFormat);
+	}
+
+	public void setStopTime(LocalDateTime stopTime) {
+		this.stopTime = stopTime;
 	}
 }
