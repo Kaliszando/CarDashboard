@@ -24,6 +24,7 @@ public class Car implements Cloneable, Serializable {
 	private LocalTime totalTime;
 	private DateTimeFormatter timeFormat;
 	private boolean isRunning;
+	private CarLights lights;
 	
 	// Constructor
 	public Car() {
@@ -37,6 +38,7 @@ public class Car implements Cloneable, Serializable {
 		mileage1 = 0;
 		mileage2 = 0;
 		
+		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	}
 	
@@ -58,12 +60,11 @@ public class Car implements Cloneable, Serializable {
 		else if(startTime == null) {
 			throw new InvalidDateException();
 		}
-		else {
-			Duration duration = Duration.between(startTime, stopTime);
-			long timeInSec = duration.getSeconds();
-			totalTime = LocalTime.of((int)timeInSec/360, (int)timeInSec/60, (int)timeInSec);
-			System.out.println(totalTime.toString());
-		}
+		
+		Duration duration = Duration.between(startTime, stopTime);
+		long timeInSec = duration.getSeconds();
+		totalTime = LocalTime.of((int)timeInSec/360, (int)timeInSec/60, (int)timeInSec);
+		System.out.println(totalTime.toString());
 	}
 
 	// Getters, Setters
@@ -173,5 +174,9 @@ public class Car implements Cloneable, Serializable {
 
 	public void setStopTime(LocalDateTime stopTime) {
 		this.stopTime = stopTime;
+	}
+
+	public CarLights getLights() {
+		return lights;
 	}
 }

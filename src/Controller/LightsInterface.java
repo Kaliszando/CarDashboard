@@ -8,4 +8,6 @@ public interface LightsInterface {
 	
 	abstract String status();
 	
+	abstract boolean isOn();
+	
 }

@@ -1,14 +1,11 @@
 package Controller;
-import java.awt.Color;
 
-public class Blinker implements LightsInterface {
+public class BlinkerLights implements LightsInterface {
 
-	String side;
-	boolean isBlinking;
-	Color color;
+	private String side;
+	private boolean isBlinking;
 	
-	public Blinker(String side) {
-		this.color = new Color(204, 102, 0);
+	public BlinkerLights(String side) {
 		this.isBlinking = false;
 		this.side = side;
 	}
@@ -26,7 +23,12 @@ public class Blinker implements LightsInterface {
 	@Override
 	public String status() {
 		String status = (this.isBlinking == true) ? "blinker is on" : "blinker is off";
-		return "Lights status: " + side + " " + status;
+		return side + " " + status;
+	}
+	
+	@Override
+	public boolean isOn() {
+		return isBlinking;
 	}
 
 }

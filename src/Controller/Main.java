@@ -10,32 +10,35 @@ public class Main {
 		if(args.length == 0) {
 			
 			Car c1 = new Car();
-			c1.start();
+			System.out.println(c1.getLights().toString());
 			
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						MainFrame frame = new MainFrame();
-						frame.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+			c1.getLights().toggleLowBeamLights();
+			System.out.println(c1.getLights().toString());
 			
-			for(int i = 0; i < 10000000; i++) {
-				System.out.println(i * i);
-			}
+			c1.getLights().toggleRunningLights();
+			System.out.println(c1.getLights().toString());
 			
-			c1.stop();
-			try {
-				c1.calculatePeriodRunning();
-			} catch (InvalidDateException e) {
-				e.printStackTrace();
-			}
+//			EventQueue.invokeLater(new Runnable() {
+//				public void run() {
+//					try {
+//						MainFrame frame = new MainFrame();
+//						frame.setVisible(true);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
+		
 			
-			System.out.println(c1.getStartTime());
-			System.out.println(c1.getStopTime());
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 		else {
 			System.out.println("Console");

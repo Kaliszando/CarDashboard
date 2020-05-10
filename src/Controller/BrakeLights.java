@@ -1,14 +1,12 @@
 package Controller;
 import java.awt.Color;
 
-public class TailLights implements LightsInterface {
+public class BrakeLights implements LightsInterface {
 
 	boolean isOn;
-	Color color;
 	
-	public TailLights() {
-		this.color = new Color(204, 0, 0);
-		this.isOn = false;
+	public BrakeLights() {
+		turnOff();
 	}
 	
 	@Override
@@ -24,7 +22,12 @@ public class TailLights implements LightsInterface {
 	@Override
 	public String status() {
 		String info = (this.isOn == true) ? "brake lights are on" : "brake lights are off";
-		return "Lights status: " + info;
+		return info;
+	}
+	
+	@Override
+	public boolean isOn() {
+		return isOn;
 	}
 
 }
