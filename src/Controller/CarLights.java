@@ -151,7 +151,9 @@ public class CarLights implements Cloneable, Serializable {
 	public FogLights getRearFogLights() {
 		return rearFogLights;
 	}
-	
-	
+
+	public void setLights(boolean lightsOn) {
+		this.lightsOn = lightsOn;
+	}
 	
 }

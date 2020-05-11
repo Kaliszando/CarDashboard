@@ -16,10 +16,14 @@ import Controller.Car;
 public class ControlsPanel extends JPanel implements ActionListener, ChangeListener {
 	
 	private JButton JBgearUp, JBgearDown, JBstartCar, JBstopCar, JBleftBlinker, JBrightBlinker;
-	private JLabel JLstartStop, JLgears, JLblinkers;
+	private JLabel JLstartStop, JLgears, JLblinkers, JLlights;
 	private JSlider JSthrottle;
+	private ButtonGroup BGlightsGroup;
+	private JRadioButton JRBlightsOff, JRBlowBeamLights, JRBparkingLights;
 	private Car car;
 	private Hashtable<Integer, JLabel> labelTable;
+	private JLabel JLhighBeams;
+	private JButton JBhighBeams;
 	
 	public ControlsPanel(Car car) {
 		this.car = car;
@@ -95,12 +99,53 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		
 		JBleftBlinker.addActionListener(this);
 		JBrightBlinker.addActionListener(this);
+		
 		// Lights
+		JLlights = new JLabel("Lights", JLabel.CENTER);
+		JLlights.setBounds(300, 5, 100, 20);
+		add(JLlights);
+		
+		JRBlightsOff = new JRadioButton("off");
+		JRBparkingLights = new JRadioButton("parking");
+		JRBlowBeamLights = new JRadioButton("low beam");
+		
+		add(JRBlightsOff);
+		add(JRBparkingLights);
+		add(JRBlowBeamLights);
+		
+		JRBlightsOff.setBounds(310, 30, 70, 30);
+		JRBparkingLights.setBounds(310, 55, 90, 30);
+		JRBlowBeamLights.setBounds(310, 80, 90, 30);
+		
+		JRBlightsOff.setSelected(true);
+		JRBparkingLights.setSelected(false);
+		JRBlowBeamLights.setSelected(false);
+		
+		BGlightsGroup = new ButtonGroup();
+		BGlightsGroup.add(JRBlightsOff);
+		BGlightsGroup.add(JRBlowBeamLights);
+		BGlightsGroup.add(JRBparkingLights);
+		
+		JRBlightsOff.addActionListener(this);
+		JRBparkingLights.addActionListener(this);
+		JRBlowBeamLights.addActionListener(this);
+		
+		// High beam lights
+		JLhighBeams = new JLabel("High beam lights", JLabel.CENTER);
+		JLhighBeams.setBounds(300, 125, 100, 20);
+		add(JLhighBeams);
+		
+		JBhighBeams = new JButton("Turn on");
+		JBhighBeams.setBounds(310, 150, 80, 30);
+		add(JBhighBeams);
+		JBhighBeams.addActionListener(this);
+		
 	}
 	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.drawLine(300, 0, 300, 200);
+		g.drawLine(400, 0, 400, 200);
 		
 	}
 
@@ -110,15 +155,18 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		if(evt.getSource() == JBstopCar) car.stop();
 		if(evt.getSource() == JBgearUp) car.gearUp();
 		if(evt.getSource() == JBgearDown) car.gearDown();
-		if(evt.getSource() == JBleftBlinker) {
-			car.getLights().toggleLeftBlinker();
-			System.out.println(car.getLights().toString());
+		if(evt.getSource() == JBleftBlinker) car.getLights().toggleLeftBlinker();
+		if(evt.getSource() == JBrightBlinker) car.getLights().toggleRightBlinker();
+		if(evt.getSource() == JRBlightsOff) {
+			if(car.getLights().getRunningLights().isOn()) car.getLights().toggleRunningLights();
+			if(car.getLights().getLowBeamLights().isOn()) car.getLights().toggleLowBeamLights();
 		}
-		if(evt.getSource() == JBrightBlinker) {
-			car.getLights().toggleRightBlinker();
-			System.out.println(car.getLights().toString());
-		}
-		
+		if(evt.getSource() == JRBparkingLights) car.getLights().toggleRunningLights();
+		if(evt.getSource() == JRBlowBeamLights) car.getLights().toggleLowBeamLights();
+		if(evt.getSource() == JBhighBeams) car.getLights().toggleHighBeamLights();
+		if(car.getLights().getHighBeamLights().isOn()) JBhighBeams.setText("Turn off");
+		else JBhighBeams.setText("Turn on");
+		System.out.println(car.getLights().toString());
 	}
 
 	@Override
