@@ -36,9 +36,9 @@ public class Car implements Cloneable, Serializable {
 		maxSpeed = 0;
 		currentSpeed = 0;
 		rpms = 0;
-		mileageTotal = 0;
-		mileage1 = 0;
-		mileage2 = 0;
+		mileageTotal = 213155;
+		mileage1 = 123;
+		mileage2 = 20;
 		gear = 0;
 		fixedSpeed = 0;
 		rpmMax = 7000;
@@ -53,12 +53,11 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	public void stop() {
-		if(getCurrentSpeed() > 0) {
+		if(getCurrentSpeed() >= 0) {
 			fixedSpeed = 0;
 			setRunning(false);	
-			return;
-		} else {
 			setStopTime(LocalDateTime.now());		
+			return;
 		}
 	}
 	

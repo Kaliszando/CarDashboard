@@ -24,11 +24,18 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	private Hashtable<Integer, JLabel> labelTable;
 	private JLabel JLhighBeams;
 	private JButton JBhighBeams;
+	private JLabel JLfogLights;
+	private JCheckBox CBfrontFogLights;
+	private JCheckBox CBrearFogLights;
+	private JButton JBfogLights;
+	private JLabel JLhazardLights;
+	private JButton JBhazardLights;
 	
 	public ControlsPanel(Car car) {
 		this.car = car;
 		setLayout(null);
 		setPreferredSize(new Dimension(1000, 200));
+		setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		
 		// Slider
 		JSthrottle = new JSlider(JSlider.VERTICAL, 0, 200, 0);
@@ -131,7 +138,7 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JRBlowBeamLights.addActionListener(this);
 		
 		// High beam lights
-		JLhighBeams = new JLabel("High beam lights", JLabel.CENTER);
+		JLhighBeams = new JLabel("High beams", JLabel.CENTER);
 		JLhighBeams.setBounds(300, 125, 100, 20);
 		add(JLhighBeams);
 		
@@ -140,13 +147,44 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		add(JBhighBeams);
 		JBhighBeams.addActionListener(this);
 		
+		// Foglights
+		JLfogLights = new JLabel("Fog lights", JLabel.CENTER);
+		JLfogLights.setBounds(400, 5, 150, 20);
+		add(JLfogLights);
+		
+		CBfrontFogLights = new JCheckBox("front", false);
+		CBrearFogLights = new JCheckBox("rear", false);
+		
+		add(CBfrontFogLights);
+		add(CBrearFogLights);
+		
+		CBfrontFogLights.setBounds(420, 30, 60, 30);
+		CBrearFogLights.setBounds(480, 30, 60, 30);
+		
+		CBfrontFogLights.addActionListener(this);
+		CBrearFogLights.addActionListener(this);
+		
+		JBfogLights = new JButton("Switch");
+		JBfogLights.setBounds(435, 70, 80, 30);
+		add(JBfogLights);
+		JBfogLights.addActionListener(this);
+		
+		// Hazard lights
+		JLhazardLights = new JLabel("Hazard lights", JLabel.CENTER);
+		JLhazardLights.setBounds(400, 125, 150, 20);
+		add(JLhazardLights);
+		
+		JBhazardLights = new JButton("Turn on");
+		JBhazardLights.setBounds(435, 150, 80, 30);
+		add(JBhazardLights);
+		JBhazardLights.addActionListener(this);
 	}
 	
 	public void paintComponent(Graphics g) {
 		g.setColor(Color.GRAY);
 		g.drawLine(300, 0, 300, 200);
 		g.drawLine(400, 0, 400, 200);
-		
+		g.drawLine(550, 0, 550, 200);
 	}
 
 	@Override
@@ -166,6 +204,17 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		if(evt.getSource() == JBhighBeams) car.getLights().toggleHighBeamLights();
 		if(car.getLights().getHighBeamLights().isOn()) JBhighBeams.setText("Turn off");
 		else JBhighBeams.setText("Turn on");
+		if(evt.getSource() == JBfogLights) {
+			if(CBfrontFogLights.isSelected())
+				car.getLights().toggleFrontFogLigths();
+			if(CBrearFogLights.isSelected())
+				car.getLights().toggleRearFogLigths();
+			CBfrontFogLights.setSelected(false);
+			CBrearFogLights.setSelected(false);
+		}
+		if(evt.getSource() == JBhazardLights) car.getLights().toggleHazardLights();
+		if(car.getLights().getHazardLights().isOn()) JBhazardLights.setText("Turn off");
+		else JBhazardLights.setText("Turn on");
 		System.out.println(car.getLights().toString());
 	}
 
