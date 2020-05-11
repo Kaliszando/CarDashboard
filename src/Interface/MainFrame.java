@@ -28,7 +28,6 @@ public class MainFrame extends JFrame {
 		add(menuPanel, BorderLayout.PAGE_START);
 		add(dashboardPanel, BorderLayout.CENTER);
 		add(controlsPanel, BorderLayout.PAGE_END);
-		
 		this.car = car;	
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
