@@ -10,10 +10,10 @@ public class Car implements Cloneable, Serializable {
 	
 	// Fields
 	private static final long serialVersionUID = -2060576986212609784L;	
-	private float mileageTotal;	// przebieg caÅ‚kowity
-	private float mileage1;		// przebieg dzienny 1 i 2, moÅ¼na wyzerowaÄ‡
+	private float mileageTotal;	// przebieg ca³kowity
+	private float mileage1;		// przebieg dzienny 1 i 2, mo¿na wyzerowaæ
 	private float mileage2;
-	private float distance;		// dÅ‚ugoÅ›Ä‡ podrÃ³Å¼y od startu
+	private float distance;		// d³ugoœæ podró¿y od startu
 	private float avgFuelConsumption;
 	private float maxSpeed;
 	private float currentSpeed;
