@@ -35,5 +35,4 @@ public class MainFrame extends JFrame {
 		setVisible(true);
 	}
 
-
 }
