@@ -18,7 +18,7 @@ import Controller.InvalidDateException;
 
 public class DashboardPanel extends JPanel {
 	
-	private Image dashboard, leftBlinker, rightBlinker;
+	private Image dashboard, leftBlinker, rightBlinker, checkEngine, parkingLights, lowBeams, highBeams;
 	RotateableImage speedPointer, rpmPointer, oilPointer, fuelPointer;
 	Car car;
 	
@@ -80,8 +80,7 @@ public class DashboardPanel extends JPanel {
 		
 		// Blinkers
 		if(car.getLights().getLeftBlinker().isOn())	g.drawImage(leftBlinker, 445, 120, null);
-		if(car.getLights().getRightBlinker().isOn()) g.drawImage(rightBlinker, 500, 120, null);
-		
+		if(car.getLights().getRightBlinker().isOn()) g.drawImage(rightBlinker, 500, 120, null);		
 		
 		repaint();
 	}
