@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
 		this.car = car;	
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 800);
+		setSize(1000, 622);
 		setVisible(true);
 	}
 
