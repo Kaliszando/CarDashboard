@@ -13,18 +13,25 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import Controller.Car;
+import Controller.InvalidDateException;
+
 public class DashboardPanel extends JPanel {
 	
-	private Image dashboard;
+	private Image dashboard, leftBlinker, rightBlinker;
 	RotateableImage speedPointer, rpmPointer, oilPointer, fuelPointer;
+	Car car;
 	
-	public DashboardPanel() {
+	public DashboardPanel(Car car) {
 		setLayout(null);
 		setBorder(BorderFactory.createLineBorder(Color.RED));
+		this.car = car;
 		
 		// Dashboard background
 		try {
 			dashboard = ImageIO.read(new File("img/dashboard.png"));
+			leftBlinker = ImageIO.read(new File("img/leftBlinker.png"));
+			rightBlinker = ImageIO.read(new File("img/rightBlinker.png"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -43,33 +50,38 @@ public class DashboardPanel extends JPanel {
 		fuelPointer.setCenter(54, 45);
 	}
 	
-	
-	int i = 0;
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g.drawImage(dashboard, 0, 0, null);
 		
+		// Car
+		car.accelerate(car.getFixedSpeed());
+		
 		// Speed pointer
 		speedPointer.setTranslation(236, 253);
-		float val = 210.f - i++ * 0.01f;
-		speedPointer.setVal(val);
+		speedPointer.setVal(car.getCurrentSpeed());
 		g2d.drawImage(speedPointer.getImg(), speedPointer.getAt(), null);
 		
 		// Rpm pointer
 		rpmPointer.setTranslation(570, 253);
-		rpmPointer.setVal(val * 100);
+		rpmPointer.setVal(car.getRpms());
 		g2d.drawImage(rpmPointer.getImg(), rpmPointer.getAt(), null);
 		
 		// Oil pointer
 		oilPointer.setTranslation(80, 389);
-		oilPointer.setVal(90);
+		oilPointer.setVal(0);
 		g2d.drawImage(oilPointer.getImg(), oilPointer.getAt(), null);
 		
 		// Fuel pointer
 		fuelPointer.setTranslation(810, 389);
-		fuelPointer.setVal(30);
+		fuelPointer.setVal(0);
 		g2d.drawImage(fuelPointer.getImg(), fuelPointer.getAt(), null);
+		
+		// Blinkers
+		if(car.getLights().getLeftBlinker().isOn())	g.drawImage(leftBlinker, 445, 120, null);
+		if(car.getLights().getRightBlinker().isOn()) g.drawImage(rightBlinker, 500, 120, null);
+		
 		
 		repaint();
 	}

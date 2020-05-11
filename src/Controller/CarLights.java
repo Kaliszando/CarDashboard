@@ -1,7 +1,10 @@
 package Controller;
 
-public class CarLights {
+import java.io.Serializable;
+
+public class CarLights implements Cloneable, Serializable {
 	
+	private static final long serialVersionUID = -4304452317729176974L;
 	private LowBeamLights lowBeamLights;
 	private HighBeamLights highBeamLights;
 	private RunningLights runningLights;
@@ -74,9 +77,9 @@ public class CarLights {
 	}
 	
 	public void toggleLeftBlinker() {
-		rightBlinker.turnOff();
 		if(leftBlinker.isOn()) leftBlinker.turnOff();
 		else leftBlinker.turnOn();
+		rightBlinker.turnOff();
 	}
 	
 	public void toggleRightBlinker() {
@@ -111,5 +114,44 @@ public class CarLights {
 		info += rearFogLights.status() + "\n";
 		return info;
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	public LowBeamLights getLowBeamLights() {
+		return lowBeamLights;
+	}
+
+	public HighBeamLights getHighBeamLights() {
+		return highBeamLights;
+	}
+
+	public RunningLights getRunningLights() {
+		return runningLights;
+	}
+
+	public BlinkerLights getLeftBlinker() {
+		return leftBlinker;
+	}
+
+	public BlinkerLights getRightBlinker() {
+		return rightBlinker;
+	}
+
+	public HazardLights getHazardLights() {
+		return hazardLights;
+	}
+
+	public FogLights getFrontFogLights() {
+		return frontFogLights;
+	}
+
+	public FogLights getRearFogLights() {
+		return rearFogLights;
+	}
+	
+	
 	
 }
