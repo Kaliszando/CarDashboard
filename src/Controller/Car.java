@@ -16,8 +16,9 @@ public class Car implements Cloneable, Serializable {
 	private float distance;		// d³ugoœæ podró¿y od startu
 	private float avgFuelConsumption;
 	private float maxSpeed;
+	private float fixedSpeed;
 	private float currentSpeed;
-	private int rpms;
+	private float rpms;
 	private int rpmMax;
 	private LocalDateTime startTime;
 	private LocalDateTime stopTime;
@@ -25,6 +26,8 @@ public class Car implements Cloneable, Serializable {
 	private DateTimeFormatter timeFormat;
 	private boolean isRunning;
 	private CarLights lights;
+	private float[] gearRatios = { 0.f, 0.0056f, 0.011f, 0.017f, 0.0232f, 0.029f, 0.036f };
+	private short gear; // 0 neutral, 1-6 normal
 	
 	// Constructor
 	public Car() {
@@ -36,7 +39,9 @@ public class Car implements Cloneable, Serializable {
 		mileageTotal = 0;
 		mileage1 = 0;
 		mileage2 = 0;
-		
+		gear = 0;
+		fixedSpeed = 0;
+		rpmMax = 7000;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	}
@@ -48,8 +53,42 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	public void stop() {
-		setStopTime(LocalDateTime.now());
-		setRunning(false);
+		if(getCurrentSpeed() > 0) {
+			fixedSpeed = 0;
+			setRunning(false);	
+			return;
+		} else {
+			setStopTime(LocalDateTime.now());		
+		}
+	}
+	
+	public void gearUp() {
+		if(gear < 6) {
+			gear++;
+			rpms /= 2;
+		}
+
+	}
+	
+	public void gearDown() {
+		if(gear > 0) {
+			gear--;
+			rpms += 600;
+		}
+	}
+	
+	public void accelerate(float desiredSpeed) {
+		//if(!isRunning) return;
+		this.currentSpeed = this.getCurrentSpeed();
+		if(currentSpeed >= desiredSpeed) {
+			rpms--;
+			return;
+		}
+		if(rpms >= rpmMax) {
+			rpms = rpmMax - 150;
+		}
+		float diff = desiredSpeed > currentSpeed ? 0.5f : -0.6f;
+		rpms += diff;
 	}
 	
 	public void calculatePeriodRunning() throws InvalidDateException {
@@ -63,14 +102,22 @@ public class Car implements Cloneable, Serializable {
 		Duration duration = Duration.between(startTime, stopTime);
 		long timeInSec = duration.getSeconds();
 		totalTime = LocalTime.of((int)timeInSec/360, (int)timeInSec/60, (int)timeInSec);
-		System.out.println(totalTime.toString());
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
 	// Getters, Setters
 	public float getMileageTotal() {
 		return mileageTotal;
 	}
 
+	public String getTotalTime() {
+		return totalTime.toString();
+	}
+	
 	public void increaseMileageTotal(float add) {
 		this.mileageTotal += add;
 	}
@@ -124,14 +171,14 @@ public class Car implements Cloneable, Serializable {
 	}
 
 	public float getCurrentSpeed() {
-		return currentSpeed;
+		return rpms * gearRatios[gear];
 	}
 
 	public void setCurrentSpeed(float currentSpeed) {
 		this.currentSpeed = currentSpeed;
 	}
 
-	public int getRpms() {
+	public float getRpms() {
 		return rpms;
 	}
 
@@ -178,4 +225,14 @@ public class Car implements Cloneable, Serializable {
 	public CarLights getLights() {
 		return lights;
 	}
+
+	public float getFixedSpeed() {
+		return fixedSpeed;
+	}
+
+	public void setFixedSpeed(float fixedSpeed) {
+		this.fixedSpeed = fixedSpeed;
+	}
+	
+	
 }

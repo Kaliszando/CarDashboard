@@ -9,7 +9,7 @@ public class Main {
 		if(args.length == 0) {
 			
 			Car car = new Car();
-			
+			//car.start();
 			
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
