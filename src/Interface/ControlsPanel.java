@@ -30,6 +30,14 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	private JButton JBfogLights;
 	private JLabel JLhazardLights;
 	private JButton JBhazardLights;
+	private JLabel JLgear;
+	private JLabel JLgearVal;
+	private JLabel JLfuelConsumption;
+	private JLabel JLfuelConsumptionVal;
+	private JLabel JLdistance;
+	private JLabel JLdistanceVal;
+	private JLabel JLavgSpeed;
+	private JLabel JLavgSpeedVal;
 	
 	public ControlsPanel(Car car) {
 		this.car = car;
@@ -52,7 +60,7 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		labelTable.put( new Integer(200), new JLabel("Top speed"));
 		JSthrottle.setLabelTable(labelTable);
 		
-		JSthrottle.setBounds(-5, 5, 120, 190);
+		JSthrottle.setBounds(1, 5, 110, 190);
 		add(JSthrottle);
 		JSthrottle.addChangeListener(this);
 		
@@ -178,6 +186,56 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JBhazardLights.setBounds(435, 150, 80, 30);
 		add(JBhazardLights);
 		JBhazardLights.addActionListener(this);
+		
+		// Dashboard computer
+		JLgear = new JLabel("Current gear", JLabel.CENTER);
+		JLgear.setBounds(560, 0, 105, 66);
+		add(JLgear);
+		
+		JLgearVal = new JLabel("N", JLabel.CENTER);
+		JLgearVal.setBounds(655, 0, 105, 66);
+		add(JLgearVal);
+		
+		JLfuelConsumption = new JLabel("Fuel consumption", JLabel.CENTER);
+		JLfuelConsumption.setBounds(560, 66, 105, 66);
+		add(JLfuelConsumption);
+		
+		JLfuelConsumptionVal = new JLabel("0.0", JLabel.CENTER);
+		JLfuelConsumptionVal.setBounds(655, 66, 105, 66);
+		add(JLfuelConsumptionVal);
+		
+		JLdistance = new JLabel("Distance", JLabel.CENTER);
+		JLdistance.setBounds(560, 133, 105, 66);
+		add(JLdistance);
+		
+		JLdistanceVal = new JLabel("0.0 km", JLabel.CENTER);
+		JLdistanceVal.setBounds(655, 133, 105, 66);
+		add(JLdistanceVal);
+		
+		//
+		JLavgSpeed = new JLabel("Avg. speed", JLabel.CENTER);
+		JLavgSpeed.setBounds(560+215, 0, 105, 66);
+		add(JLavgSpeed);
+		
+		JLavgSpeedVal = new JLabel("0.0 km/h", JLabel.CENTER);
+		JLavgSpeedVal.setBounds(655+225, 0, 105, 66);
+		add(JLavgSpeedVal);
+		
+		JLfuelConsumption = new JLabel("Max speed", JLabel.CENTER);
+		JLfuelConsumption.setBounds(560+215, 66, 105, 66);
+		add(JLfuelConsumption);
+		
+		JLfuelConsumptionVal = new JLabel("0.0 km/h", JLabel.CENTER);
+		JLfuelConsumptionVal.setBounds(655+225, 66, 105, 66);
+		add(JLfuelConsumptionVal);
+		
+		JLdistance = new JLabel("Time", JLabel.CENTER);
+		JLdistance.setBounds(560+215, 133, 105, 66);
+		add(JLdistance);
+		
+		JLdistanceVal = new JLabel("0 s", JLabel.CENTER);
+		JLdistanceVal.setBounds(655+225, 133, 105, 66);
+		add(JLdistanceVal);
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -185,14 +243,24 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		g.drawLine(300, 0, 300, 200);
 		g.drawLine(400, 0, 400, 200);
 		g.drawLine(550, 0, 550, 200);
+		g.drawLine(760, 0, 760, 200);
+		g.drawLine(550, 66, 1000, 66);
+		g.drawLine(550, 66, 1000, 66);
+		g.drawLine(550, 133, 1000, 133);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		if(evt.getSource() == JBstartCar) car.start();
 		if(evt.getSource() == JBstopCar) car.stop();
-		if(evt.getSource() == JBgearUp) car.gearUp();
-		if(evt.getSource() == JBgearDown) car.gearDown();
+		if(evt.getSource() == JBgearUp) {
+			//JLgearVal.setText(car.gearToString());
+			car.gearUp();
+		}
+		if(evt.getSource() == JBgearDown) {
+			//JLgearVal.setText(car.gearToString());
+			car.gearDown();
+		}
 		if(evt.getSource() == JBleftBlinker) car.getLights().toggleLeftBlinker();
 		if(evt.getSource() == JBrightBlinker) car.getLights().toggleRightBlinker();
 		if(evt.getSource() == JRBlightsOff) {
@@ -215,7 +283,6 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		if(evt.getSource() == JBhazardLights) car.getLights().toggleHazardLights();
 		if(car.getLights().getHazardLights().isOn()) JBhazardLights.setText("Turn off");
 		else JBhazardLights.setText("Turn on");
-		System.out.println(car.getLights().toString());
 	}
 
 	@Override
