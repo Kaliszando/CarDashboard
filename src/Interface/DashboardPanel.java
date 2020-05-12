@@ -103,12 +103,12 @@ public class DashboardPanel extends JPanel {
 		
 		// Oil pointer
 		oilPointer.setTranslation(80, 389);
-		oilPointer.setVal(0);
+		if(car.isRunning()) oilPointer.setVal(car.getOilTemp());
 		g2d.drawImage(oilPointer.getImg(), oilPointer.getAt(), null);
 		
 		// Fuel pointer
 		fuelPointer.setTranslation(810, 389);
-		fuelPointer.setVal(0);
+		if(car.isRunning()) fuelPointer.setVal(car.getFuel());	
 		g2d.drawImage(fuelPointer.getImg(), fuelPointer.getAt(), null);
 		
 		// Blinkers

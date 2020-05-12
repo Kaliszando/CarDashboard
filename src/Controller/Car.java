@@ -10,10 +10,10 @@ public class Car implements Cloneable, Serializable {
 	
 	// Fields
 	private static final long serialVersionUID = -2060576986212609784L;	
-	private float mileageTotal;	// przebieg ca³kowity
-	private float mileage1;		// przebieg dzienny 1 i 2, mo¿na wyzerowaæ
+	private float mileageTotal;	// przebieg caï¿½kowity
+	private float mileage1;		// przebieg dzienny 1 i 2, moï¿½na wyzerowaï¿½
 	private float mileage2;
-	private float distance;		// d³ugoœæ podró¿y od startu
+	private float distance;		// dï¿½ugoï¿½ï¿½ podrï¿½y od startu
 	private float avgFuelConsumption;
 	private float maxSpeed;
 	private float fixedSpeed;
@@ -28,6 +28,7 @@ public class Car implements Cloneable, Serializable {
 	private CarLights lights;
 	private float[] gearRatios = { 0.f, 0.0056f, 0.011f, 0.017f, 0.0232f, 0.029f, 0.036f };
 	private short gear; // 0 neutral, 1-6 normal
+	private float oilTemp, fuel;
 	
 	// Constructor
 	public Car() {
@@ -36,12 +37,14 @@ public class Car implements Cloneable, Serializable {
 		maxSpeed = 0;
 		currentSpeed = 0;
 		rpms = 0;
-		mileageTotal = 213155;
+		mileageTotal = 213155; // test values
 		mileage1 = 123;
 		mileage2 = 20;
 		gear = 0;
 		fixedSpeed = 0;
 		rpmMax = 7000;
+		oilTemp = 73;
+		fuel = 13;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	}
@@ -106,6 +109,10 @@ public class Car implements Cloneable, Serializable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+	
+	public String gearToString() {
+		return gear == 0 ? "N" : String.valueOf(this.gear);
 	}
 	
 	// Getters, Setters
@@ -231,6 +238,22 @@ public class Car implements Cloneable, Serializable {
 
 	public void setFixedSpeed(float fixedSpeed) {
 		this.fixedSpeed = fixedSpeed;
+	}
+
+	public float getOilTemp() {
+		return oilTemp;
+	}
+
+	public void setOilTemp(float oliTemp) {
+		this.oilTemp = oliTemp;
+	}
+
+	public float getFuel() {
+		return fuel;
+	}
+
+	public void setFuel(float fuel) {
+		this.fuel = fuel;
 	}
 	
 	
