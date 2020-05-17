@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 		add(controlsPanel, BorderLayout.PAGE_END);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 790);
+		setSize(1015, 790);
 		setVisible(true);
 	}
 

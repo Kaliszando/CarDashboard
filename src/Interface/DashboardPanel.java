@@ -90,6 +90,12 @@ public class DashboardPanel extends JPanel {
 		
 		// Car
 		car.accelerate(car.getFixedSpeed());
+		try {
+			car.calculatePeriodRunning();
+		} catch (InvalidDateException e) {
+			e.printStackTrace();
+		}
+		car.update();
 		
 		// Speed pointer
 		speedPointer.setTranslation(236, 253);
