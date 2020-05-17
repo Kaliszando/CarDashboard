@@ -5,6 +5,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+import Data.Travel;
 
 public class Car implements Cloneable, Serializable {
 	
@@ -29,6 +32,7 @@ public class Car implements Cloneable, Serializable {
 	private float[] gearRatios = { 0.f, 0.0056f, 0.011f, 0.017f, 0.0232f, 0.029f, 0.036f };
 	private short gear; // 0 neutral, 1-6 normal
 	private float oilTemp, fuel;
+	private ArrayList<Travel> travels;
 	
 	// Constructor
 	public Car() {
@@ -47,6 +51,7 @@ public class Car implements Cloneable, Serializable {
 		fuel = 13;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		travels = new ArrayList<>();
 	}
 	
 	// Methods
@@ -80,7 +85,6 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	public void accelerate(float desiredSpeed) {
-		//if(!isRunning) return;
 		this.currentSpeed = this.getCurrentSpeed();
 		if(currentSpeed >= desiredSpeed) {
 			rpms--;
@@ -113,6 +117,10 @@ public class Car implements Cloneable, Serializable {
 	
 	public String gearToString() {
 		return gear == 0 ? "N" : String.valueOf(this.gear);
+	}
+
+	public void setFuel(float fuel) {
+		this.fuel = fuel;
 	}
 	
 	// Getters, Setters
@@ -252,9 +260,8 @@ public class Car implements Cloneable, Serializable {
 		return fuel;
 	}
 
-	public void setFuel(float fuel) {
-		this.fuel = fuel;
+	public ArrayList<Travel> getTravels() {
+		return travels;
 	}
-	
 	
 }

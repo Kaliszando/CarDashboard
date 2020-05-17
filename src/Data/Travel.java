@@ -8,24 +8,25 @@ import Controller.InvalidNumberException;
 public class Travel implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 4725391663616879476L;
-	private int length;
-	private int mileage;
+	private float length;
+	private float mileage;
 	private float avgFuelConsumption;
-	private LocalDate date;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	
 	// Constructors
 	public Travel(int length, int mileage, float fuelConsumption, int year, int month, int day) {
 		this.length = length;
 		this.mileage = mileage;
 		this.avgFuelConsumption = fuelConsumption;
-		this.date = LocalDate.of(year, month, day);
+		this.startDate = LocalDate.of(year, month, day);
 	}
 	
 	public Travel(int length, int mileage, float fuelConsumption, String date) {
 		this.length = length;
 		this.mileage = mileage;
 		this.avgFuelConsumption = fuelConsumption;
-		this.date = LocalDate.parse(date);
+		this.startDate = LocalDate.parse(date);
 	}
 	
 	public Travel(Object obj) {
@@ -34,7 +35,7 @@ public class Travel implements Cloneable, Serializable {
 		this.length = Integer.valueOf(parts[0]);
 		this.mileage = Integer.valueOf(parts[1]);
 		this.avgFuelConsumption = Float.valueOf(parts[2]);
-		this.date = LocalDate.parse(parts[3]);
+		this.startDate = LocalDate.parse(parts[3]);
 	}
 	//
 	
@@ -44,50 +45,50 @@ public class Travel implements Cloneable, Serializable {
 	}
 	
 	public String toString() {
-		return date + " " + mileage + " " + length + " " + avgFuelConsumption;
+		return startDate + " " + mileage + " " + length + " " + avgFuelConsumption;
 	}
 	
 	public String toStreamString() {
-		return length + ":" + mileage + ":" + avgFuelConsumption + ":" + date + ";";
+		return length + ":" + mileage + ":" + avgFuelConsumption + ":" + startDate + ";";
 	}
 	
 	// Setters
-	public void setLength(int newLength) throws InvalidNumberException {
+	public void setLength(float newLength) throws InvalidNumberException {
 		if(newLength <= 0)
 			throw new InvalidNumberException(String.valueOf(newLength) + " długość podróży nie może być ujemna");
 		this.length = newLength;
 	}
 	
-	public void setMileage(int newMileage) {
-		this.length = newMileage;
+	public void setMileage(float newMileage) {
+		this.mileage = newMileage;
 	}
 	
 	public void setAvgFuelConsumption(float newAvgFuelConsumption) {
 		this.avgFuelConsumption = newAvgFuelConsumption;
 	}
 	
-	public void setDate(int year, int month, int day) throws InvalidDateException {
+	public void setStartDate(int year, int month, int day) throws InvalidDateException {
 		LocalDate newDate = LocalDate.of(year, month, day);
 		if(LocalDate.now().compareTo(newDate) < 0) {
 			throw new InvalidDateException(newDate.toString() + " podana data jest z przyszłości");
 		}
-		this.date = newDate;
+		this.startDate = newDate;
 	}
 	
-	public void setDate(String date) throws InvalidDateException {
+	public void setStartDate(String date) throws InvalidDateException {
 		LocalDate newDate = LocalDate.parse(date);
 		if(LocalDate.now().compareTo(newDate) < 0) {
 			throw new InvalidDateException(newDate.toString() + " podana data jest z przyszłości");
 		}
-		this.date = newDate;
+		this.startDate = newDate;
 	}
 	
 	// Getters
-	public int getLength() {
+	public float getLength() {
 		return this.length;
 	}
 	
-	public int getMileage() {
+	public float getMileage() {
 		return this.mileage;
 	}
 	
@@ -95,7 +96,15 @@ public class Travel implements Cloneable, Serializable {
 		return this.avgFuelConsumption;
 	}
 	
-	public LocalDate getDate() {
-		return this.date;
+	public LocalDate getStartDate() {
+		return this.startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 }
