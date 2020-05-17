@@ -1,6 +1,8 @@
 package Data;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import Controller.InvalidDateException;
 import Controller.InvalidNumberException;
@@ -11,22 +13,30 @@ public class Travel implements Cloneable, Serializable {
 	private float length;
 	private float mileage;
 	private float avgFuelConsumption;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private LocalDateTime startDate;
+	private LocalDateTime endDate;
+	private DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	// Constructors
-	public Travel(int length, int mileage, float fuelConsumption, int year, int month, int day) {
+	public Travel(float length, float mileage, float fuelConsumption, int year, int month, int day) {
 		this.length = length;
 		this.mileage = mileage;
 		this.avgFuelConsumption = fuelConsumption;
-		this.startDate = LocalDate.of(year, month, day);
+		this.startDate = LocalDateTime.of(year, month, day, 0, 0);
 	}
 	
-	public Travel(int length, int mileage, float fuelConsumption, String date) {
+	public Travel(float length, float mileage, float fuelConsumption, String date) {
 		this.length = length;
 		this.mileage = mileage;
 		this.avgFuelConsumption = fuelConsumption;
-		this.startDate = LocalDate.parse(date);
+		this.startDate = LocalDateTime.parse(date);
+	}
+	
+	public Travel(float length, float mileage, float fuelConsumption, LocalDateTime date) {
+		this.length = length;
+		this.mileage = mileage;
+		this.avgFuelConsumption = fuelConsumption;
+		this.startDate = date;
 	}
 	
 	public Travel(Object obj) {
@@ -35,7 +45,7 @@ public class Travel implements Cloneable, Serializable {
 		this.length = Integer.valueOf(parts[0]);
 		this.mileage = Integer.valueOf(parts[1]);
 		this.avgFuelConsumption = Float.valueOf(parts[2]);
-		this.startDate = LocalDate.parse(parts[3]);
+		this.startDate = LocalDateTime.parse(parts[3]);
 	}
 	//
 	
@@ -45,7 +55,11 @@ public class Travel implements Cloneable, Serializable {
 	}
 	
 	public String toString() {
-		return startDate + " " + mileage + " " + length + " " + avgFuelConsumption;
+		return "Start time: " + startDate.format(timeFormat) + "\n" +
+				"End time: " + endDate.format(timeFormat) + "\n" +
+				"Distance: " + length + "\n" +
+				"Total mileage: " + mileage + "\n" +
+				"Avg. fuel consumption: " + avgFuelConsumption;
 	}
 	
 	public String toStreamString() {
@@ -54,7 +68,7 @@ public class Travel implements Cloneable, Serializable {
 	
 	// Setters
 	public void setLength(float newLength) throws InvalidNumberException {
-		if(newLength <= 0)
+		if(newLength < 0)
 			throw new InvalidNumberException(String.valueOf(newLength) + " długość podróży nie może być ujemna");
 		this.length = newLength;
 	}
@@ -68,16 +82,16 @@ public class Travel implements Cloneable, Serializable {
 	}
 	
 	public void setStartDate(int year, int month, int day) throws InvalidDateException {
-		LocalDate newDate = LocalDate.of(year, month, day);
-		if(LocalDate.now().compareTo(newDate) < 0) {
+		LocalDateTime newDate = LocalDateTime.of(year, month, day, 0, 0);
+		if(LocalDateTime.now().compareTo(newDate) < 0) {
 			throw new InvalidDateException(newDate.toString() + " podana data jest z przyszłości");
 		}
 		this.startDate = newDate;
 	}
 	
 	public void setStartDate(String date) throws InvalidDateException {
-		LocalDate newDate = LocalDate.parse(date);
-		if(LocalDate.now().compareTo(newDate) < 0) {
+		LocalDateTime newDate = LocalDateTime.parse(date);
+		if(LocalDateTime.now().compareTo(newDate) < 0) {
 			throw new InvalidDateException(newDate.toString() + " podana data jest z przyszłości");
 		}
 		this.startDate = newDate;
@@ -96,15 +110,23 @@ public class Travel implements Cloneable, Serializable {
 		return this.avgFuelConsumption;
 	}
 	
-	public LocalDate getStartDate() {
+	public String getStartDateString() {
+		return this.startDate.format(timeFormat);
+	}
+	
+	public String getEndDateString() {
+		return this.endDate.format(timeFormat);
+	}
+	
+	public LocalDateTime getStartDate() {
 		return this.startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 }

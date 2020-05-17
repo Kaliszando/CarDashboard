@@ -1,12 +1,14 @@
 package Controller;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import Data.Database;
 import Data.Travel;
 
 public class Car implements Cloneable, Serializable {
@@ -21,6 +23,7 @@ public class Car implements Cloneable, Serializable {
 	private float maxSpeed;
 	private float fixedSpeed;
 	private float currentSpeed;
+	private float avgSpeed;
 	private float rpms;
 	private int rpmMax;
 	private LocalDateTime startTime;
@@ -33,6 +36,9 @@ public class Car implements Cloneable, Serializable {
 	private short gear; // 0 neutral, 1-6 normal
 	private float oilTemp, fuel;
 	private ArrayList<Travel> travels;
+	private Travel currentTravel;
+	public Database db;
+	private long timeInSec;
 	
 	// Constructor
 	public Car() {
@@ -41,9 +47,9 @@ public class Car implements Cloneable, Serializable {
 		maxSpeed = 0;
 		currentSpeed = 0;
 		rpms = 0;
-		mileageTotal = 213155; // test values
-		mileage1 = 123;
-		mileage2 = 20;
+		mileageTotal = 0; 
+		mileage1 = 0;
+		mileage2 = 0;
 		gear = 0;
 		fixedSpeed = 0;
 		rpmMax = 7000;
@@ -52,19 +58,46 @@ public class Car implements Cloneable, Serializable {
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 		travels = new ArrayList<>();
+		
+		try {
+			db = new Database();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// Methods
 	public void start() {
+		avgSpeed = 0;
 		setStartTime(LocalDateTime.now());
 		setRunning(true);
+		currentTravel = new Travel(0, mileageTotal, 0, LocalDateTime.now());
 	}
 	
 	public void stop() {
 		if(getCurrentSpeed() >= 0) {
 			fixedSpeed = 0;
 			setRunning(false);	
-			setStopTime(LocalDateTime.now());		
+			setStopTime(LocalDateTime.now());
+			
+			try {
+				currentTravel.setLength(distance);
+			} catch (InvalidNumberException e) {
+				e.printStackTrace();
+			}
+			currentTravel.setMileage(mileageTotal);
+			currentTravel.setAvgFuelConsumption(avgFuelConsumption);
+			currentTravel.setEndDate(LocalDateTime.now());	
+			
+			System.out.println(currentTravel.toString());
+			travels.add(currentTravel);
+			
+			try {
+				db.addTravel(currentTravel);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 			return;
 		}
 	}
@@ -74,13 +107,19 @@ public class Car implements Cloneable, Serializable {
 			gear++;
 			rpms /= 2;
 		}
-
 	}
 	
 	public void gearDown() {
 		if(gear > 0) {
 			gear--;
 			rpms += 600;
+		}
+	}
+	
+	public void update() {
+		if(timeInSec % 1 == 0) {
+			avgSpeed = (avgSpeed + currentSpeed) / 2;
+			distance += avgSpeed * timeInSec / 360;			
 		}
 	}
 	
@@ -98,16 +137,14 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	public void calculatePeriodRunning() throws InvalidDateException {
-		if(stopTime == null) {
-			stopTime = LocalDateTime.now();
+		if(startTime == null) {
+			return;
 		}
-		else if(startTime == null) {
-			throw new InvalidDateException();
-		}
+		if(isRunning)stopTime = LocalDateTime.now();
 		
 		Duration duration = Duration.between(startTime, stopTime);
-		long timeInSec = duration.getSeconds();
-		totalTime = LocalTime.of((int)timeInSec/360, (int)timeInSec/60, (int)timeInSec);
+		timeInSec = duration.getSeconds();
+		totalTime = LocalTime.of((int)timeInSec / 360 % 24, (int)timeInSec / 60 % 60, (int)timeInSec % 60);
 	}
 
 	@Override
