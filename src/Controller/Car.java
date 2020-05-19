@@ -11,14 +11,26 @@ import java.util.ArrayList;
 import Data.Database;
 import Data.Travel;
 
+/**
+ * Klasa reprezentująca samochód i komputer pokładowy.
+ * 
+ * Wykonuje operacje na takich wartościach jak przebieg całkowity, dystans, średnie spalanie, prędkość, itd.
+ * Pozwala operować silnikiem, zmianą biegów, włączaniem wyłączaniem świateł.
+ * Rejestruje podróże, która zaczynają się po wywołaniu metody {@link #start()}, a kończą {@link #stop()}
+ * 
+ * @version 1.0
+ * @author Adam
+ * 
+ */
+
 public class Car implements Cloneable, Serializable {
 	
 	// Fields
 	private static final long serialVersionUID = -2060576986212609784L;	
-	private float mileageTotal;	// przebieg ca�kowity
-	private float mileage1;		// przebieg dzienny 1 i 2, mo�na wyzerowa�
+	private float mileageTotal;	// przebieg caďż˝kowity
+	private float mileage1;		// przebieg dzienny 1 i 2, moďż˝na wyzerowaďż˝
 	private float mileage2;
-	private float distance;		// d�ugo�� podr�y od startu
+	private float distance;		// dďż˝ugoďż˝ďż˝ podrďż˝y od startu
 	private float avgFuelConsumption;
 	private float maxSpeed;
 	private float fixedSpeed;
@@ -39,7 +51,7 @@ public class Car implements Cloneable, Serializable {
 	private Travel currentTravel;
 	public Database db;
 	private long timeInSec;
-	
+
 	// Constructor
 	public Car() {
 		distance = 0;
@@ -117,12 +129,17 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	public void update() {
-		if(timeInSec % 1 == 0) {
-			avgSpeed = (avgSpeed + currentSpeed) / 2;
-			distance += avgSpeed * timeInSec / 360;			
-		}
+		//avgSpeed += currentSpeed;
+		//System.out.println(avgSpeed / timeInSec + " " + timeInSec);		
 	}
 	
+	
+	/**
+	 * Wykonywana cyklicznie, zwięszka lub zminiejsza obroty silnika
+	 * w zależności od ustawionej prędkościci, podobnie jak w tempomacie. 
+	 * 
+	 * @param desiredSpeed docelowa prędkość którą chcemy osiągnąć
+	 */
 	public void accelerate(float desiredSpeed) {
 		this.currentSpeed = this.getCurrentSpeed();
 		if(currentSpeed >= desiredSpeed) {
@@ -132,7 +149,7 @@ public class Car implements Cloneable, Serializable {
 		if(rpms >= rpmMax) {
 			rpms = rpmMax - 150;
 		}
-		float diff = desiredSpeed > currentSpeed ? 0.5f : -0.6f;
+		float diff = desiredSpeed > currentSpeed ? 0.7f : -0.8f;
 		rpms += diff;
 	}
 	
@@ -160,7 +177,6 @@ public class Car implements Cloneable, Serializable {
 		this.fuel = fuel;
 	}
 	
-	// Getters, Setters
 	public float getMileageTotal() {
 		return mileageTotal;
 	}
@@ -289,8 +305,8 @@ public class Car implements Cloneable, Serializable {
 		return oilTemp;
 	}
 
-	public void setOilTemp(float oliTemp) {
-		this.oilTemp = oliTemp;
+	public void setOilTemp(float oilTemp) {
+		this.oilTemp = oilTemp;
 	}
 
 	public float getFuel() {
@@ -299,6 +315,10 @@ public class Car implements Cloneable, Serializable {
 
 	public ArrayList<Travel> getTravels() {
 		return travels;
+	}
+	
+	public long getTimeInSec() {
+		return timeInSec;
 	}
 	
 }

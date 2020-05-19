@@ -239,6 +239,7 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	}
 	
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		g.setColor(Color.GRAY);
 		g.drawLine(300, 0, 300, 200);
 		g.drawLine(400, 0, 400, 200);
@@ -247,6 +248,10 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		g.drawLine(550, 66, 1000, 66);
 		g.drawLine(550, 66, 1000, 66);
 		g.drawLine(550, 133, 1000, 133);
+		
+		JLgearVal.setText(car.gearToString());
+		JLdistanceVal.setText(String.valueOf(car.getTimeInSec()) + " sec");
+		repaint();
 	}
 
 	@Override

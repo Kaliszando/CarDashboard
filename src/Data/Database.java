@@ -1,11 +1,14 @@
 package Data;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
 
 public class Database {
 	
@@ -19,25 +22,6 @@ public class Database {
 		connection = DriverManager.getConnection(connectionUrl, "JDBC" , "Java1234");
 		statement = connection.createStatement();
 	    
-	}
-	
-	public String travelsToString() throws SQLException {
-		ResultSet rs = statement.executeQuery("SELECT * FROM Travels");
-		
-		String info = new String();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
-
-	    while (rs.next()) {
-	        int id = rs.getInt(1);
-	        float distance = rs.getFloat(2);
-	        float totalMileage = rs.getFloat(3);
-	        float avgFuelConsumption = rs.getFloat(4);
-	        LocalDateTime startDate = LocalDateTime.parse(rs.getString(5), formatter);
-	        LocalDateTime endDate = LocalDateTime.parse(rs.getString(6), formatter);
-	        info += id + " " + distance + " " + totalMileage + " " + avgFuelConsumption + " " + startDate + " " + endDate + "\n";
-	    }
-	    
-		return info;
 	}
 	
 	public void addTravel(Travel travel) throws SQLException {
