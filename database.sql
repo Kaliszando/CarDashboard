@@ -13,12 +13,6 @@ CREATE TABLE Travels (
 	endDate				DATETIME NOT NULL,
 )
 
-INSERT INTO Travels
-VALUES ('23.4', '143456.4', '4.4', '2020-05-12 12:35', '2020-05-12 12:59');
-
-INSERT INTO Travels
-VALUES ('32.4', '132446.4', '6.4', '2020-07-12 12:38:21', '2020-07-12 13:01:21');
-
 SELECT * FROM Travels
 WHERE distance='0';
 
