@@ -1,4 +1,4 @@
-package Interface;
+package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,6 +9,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 
+/**
+ * Klasa reprezentuje okienko dialogowe ustawieñ.
+ * 
+ * @version 1.0
+ * @author Adam Kalisz
+ * @author Kamil Rojszczak
+ * 
+ */
 public class SettingsFrame extends JFrame implements ActionListener {
 
 	JMenu menu1, menu2, menu3, menu4, subMenu;
@@ -16,6 +24,10 @@ public class SettingsFrame extends JFrame implements ActionListener {
 	JTextField text;
 	JMenuItem item1, item2, item3, item4, item5, item6, item7, item8;
 	
+	/**
+	 * Tworzy okno ustawieñ.
+	 * @param title tytu³ okienka dialogowego
+	 */
 	public SettingsFrame(String title) {
 		super(title);
 		setLayout(new BorderLayout());
@@ -74,6 +86,10 @@ public class SettingsFrame extends JFrame implements ActionListener {
 		add(menuBar, BorderLayout.PAGE_START);
 	}
 	
+	/**
+	 * Obs³uga zdarzeñ.
+	 * @param e powsta³e zdarzenie
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == item1) {

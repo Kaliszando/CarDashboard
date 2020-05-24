@@ -1,4 +1,4 @@
-package Interface;
+package GUI;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -8,6 +8,14 @@ import javax.swing.*;
 
 import Controller.Car;
 
+/**
+ * Klasa odpowiada za stworzenie menu ponad desk¹ rozdzielcza.
+ * 
+ * @version 1.0
+ * @author Adam Kalisz
+ * @author Kamil Rojszczak
+ * 
+ */
 public class MenuPanel extends JPanel implements ActionListener {
 	
 	private Car car;
@@ -16,6 +24,11 @@ public class MenuPanel extends JPanel implements ActionListener {
 	private TravelHistoryFrame historyFrame;
 	private boolean settingsVisible, historyVisible;
 	
+	/**
+	 * Odpowiada za stworzenie menu i jego zawartoœæ. 
+	 * 
+	 * @param car obiekt klasy Car
+	 */
 	public MenuPanel(Car car) {
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		this.car = car;
@@ -39,6 +52,10 @@ public class MenuPanel extends JPanel implements ActionListener {
 		historyVisible = false;
 	}
 
+	/**
+	 * Obs³uga zdarzeñ menu.
+	 * @param e powsta³e zdarzenie
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == JBsettings) {

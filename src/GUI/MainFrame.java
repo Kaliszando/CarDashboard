@@ -1,4 +1,4 @@
-package Interface;
+package GUI;
 
 import java.awt.BorderLayout;
 
@@ -9,12 +9,23 @@ import javax.swing.JTextArea;
 
 import Controller.Car;
 
+/**
+ * Klasa odpowiada za otwarcie g³ównego okna JFrame oraz wywo³anie klas MenuPanel, DashboardPanel i ControlsPanel.
+ * @version 1.0
+ * @author Adam Kalisz
+ * @author Kamil Rojszczak
+ * 
+ */
 public class MainFrame extends JFrame {
 	
 	private MenuPanel menuPanel;
 	private DashboardPanel dashboardPanel;
 	private ControlsPanel controlsPanel;
 	
+	/**
+	 * Otwiera g³ówne okno JFrame oraz wywo³uje klas MenuPanel, DshboardPanel i ControlsPanel.
+	 * @param car obiekt klasy Car
+	 */
 	public MainFrame(Car car) {
 		super("Car dashboard");
 		

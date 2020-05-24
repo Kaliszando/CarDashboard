@@ -1,4 +1,4 @@
-package Interface;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,12 +7,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Controller.Car;
 
+/**
+ * Klasa odpowiada za wyœwietlanie panelu sterowania pojazdem.
+ * @version 1.0
+ * @author Adam Kalisz
+ * @author Kamil Rojszczak
+ * 
+ */
 public class ControlsPanel extends JPanel implements ActionListener, ChangeListener {
 	
 	private JButton JBgearUp, JBgearDown, JBstartCar, JBstopCar, JBleftBlinker, JBrightBlinker;
@@ -34,11 +48,16 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	private JLabel JLgearVal;
 	private JLabel JLfuelConsumption;
 	private JLabel JLfuelConsumptionVal;
-	private JLabel JLdistance;
-	private JLabel JLdistanceVal;
+	private JLabel JLtime;
+	private JLabel JLtimeVal;
 	private JLabel JLavgSpeed;
 	private JLabel JLavgSpeedVal;
 	
+	/**
+	 * Konstruktor odpowiada za stworzenie i wyœwietlenie na panelu, elementów takich jak napisy, 
+	 * suwaki, przyciski itd.
+	 * @param car obiekt klasy Car
+	 */
 	public ControlsPanel(Car car) {
 		this.car = car;
 		setLayout(null);
@@ -204,13 +223,13 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JLfuelConsumptionVal.setBounds(655, 66, 105, 66);
 		add(JLfuelConsumptionVal);
 		
-		JLdistance = new JLabel("Distance", JLabel.CENTER);
-		JLdistance.setBounds(560, 133, 105, 66);
-		add(JLdistance);
+		JLtime = new JLabel("Distance", JLabel.CENTER);
+		JLtime.setBounds(560, 133, 105, 66);
+		add(JLtime);
 		
-		JLdistanceVal = new JLabel("0.0 km", JLabel.CENTER);
-		JLdistanceVal.setBounds(655, 133, 105, 66);
-		add(JLdistanceVal);
+		JLtimeVal = new JLabel("0.0 km", JLabel.CENTER);
+		JLtimeVal.setBounds(655, 133, 105, 66);
+		add(JLtimeVal);
 		
 		//
 		JLavgSpeed = new JLabel("Avg. speed", JLabel.CENTER);
@@ -229,15 +248,19 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JLfuelConsumptionVal.setBounds(655+225, 66, 105, 66);
 		add(JLfuelConsumptionVal);
 		
-		JLdistance = new JLabel("Time", JLabel.CENTER);
-		JLdistance.setBounds(560+215, 133, 105, 66);
-		add(JLdistance);
+		JLtime = new JLabel("Time running", JLabel.CENTER);
+		JLtime.setBounds(560+215, 133, 105, 66);
+		add(JLtime);
 		
-		JLdistanceVal = new JLabel("0 s", JLabel.CENTER);
-		JLdistanceVal.setBounds(655+225, 133, 105, 66);
-		add(JLdistanceVal);
+		JLtimeVal = new JLabel("0 s", JLabel.CENTER);
+		JLtimeVal.setBounds(655+225, 133, 105, 66);
+		add(JLtimeVal);
 	}
 	
+	/**
+	 * Rysuje elementy graficzne panelu sterowania oraz napisy komputera pok³adowego.
+	 * @param g obiekt klasy Graphics umo¿liwiaj¹cy rysowanie
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.GRAY);
@@ -250,22 +273,28 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		g.drawLine(550, 133, 1000, 133);
 		
 		JLgearVal.setText(car.gearToString());
-		JLdistanceVal.setText(String.valueOf(car.getTimeInSec()) + " sec");
+		
+		String timeVal = new String();
+		try {
+			timeVal = car.getTotalTime();			
+		} catch (NullPointerException e) {
+			timeVal= "00:00";
+		}
+		
+		JLtimeVal.setText(timeVal);
 		repaint();
 	}
 
+	/**
+	 * Obs³uga przycisków i wywo³anie metod im przypisanym.
+	 * @param evt powsta³e zdarzenie
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		if(evt.getSource() == JBstartCar) car.start();
 		if(evt.getSource() == JBstopCar) car.stop();
-		if(evt.getSource() == JBgearUp) {
-			//JLgearVal.setText(car.gearToString());
-			car.gearUp();
-		}
-		if(evt.getSource() == JBgearDown) {
-			//JLgearVal.setText(car.gearToString());
-			car.gearDown();
-		}
+		if(evt.getSource() == JBgearUp) car.gearUp();
+		if(evt.getSource() == JBgearDown) car.gearDown();
 		if(evt.getSource() == JBleftBlinker) car.getLights().toggleLeftBlinker();
 		if(evt.getSource() == JBrightBlinker) car.getLights().toggleRightBlinker();
 		if(evt.getSource() == JRBlightsOff) {
@@ -290,6 +319,10 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		else JBhazardLights.setText("Turn on");
 	}
 
+	/**
+	 * Obs³uga slidera.
+	 * @param evt powsta³e zdarzenie
+	 */
 	@Override
 	public void stateChanged(ChangeEvent evt) {
         if (evt.getSource() == JSthrottle && car.isRunning()) {
