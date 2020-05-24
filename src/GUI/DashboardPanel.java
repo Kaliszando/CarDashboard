@@ -1,38 +1,48 @@
-package Interface;
+package GUI;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Controller.Car;
 import Controller.InvalidDateException;
 
+/**
+ * Klasa odpowiada za wyœwietlanie tablicy rozdzielczej, wskazówek prêdkoœciomierza i obrotomierza, liczników.
+ * 
+ * @author Adam Kalisz
+ * @author Kamil Rojszczak
+ * @version 1.0
+ * 
+ */
 public class DashboardPanel extends JPanel {
 	
+	private static final long serialVersionUID = -5399476276986171865L;
 	private Image dashboard, leftBlinker, rightBlinker, checkEngine, parkingLights, lowBeams, highBeams, battery, hazards, frontFogLights, rearFogLights;
-	private RotateableImage speedPointer, rpmPointer, oilPointer, fuelPointer;
+	private RotateableImage speedPointer, rpmPointer, waterPointer, fuelPointer;
 	private Car car;
 	private JLabel JLmileageTotal;
 	private JLabel JLmileage1;
 	private Font font1, font2;
 	private JLabel JLmileage2;
 	
+	/**
+	 * £aduje obrazy t³a, kontrolek, wskazówek oraz okreœla ich rozmieszczenie.
+	 * Ustawia równie¿ rozmieszczenie i wygl¹d liczników dziennych i przebiegu.
+	 * @param car obiekt klasy Car
+	 */
 	public DashboardPanel(Car car) {
 		setLayout(null);
 		this.car = car;
 		
-		// Dashboard background
+		// Loading images
 		try {
 			dashboard = ImageIO.read(new File("img/dashboard.png"));
 			leftBlinker = ImageIO.read(new File("img/leftBlinker.png"));
@@ -57,8 +67,8 @@ public class DashboardPanel extends JPanel {
 		rpmPointer = new RotateableImage("img/bigPointer.png", 0, 7000, 258);
 		rpmPointer.setCenter(99, 24);
 
-		oilPointer = new RotateableImage("img/smallPointer.png", 70, 110, 102);
-		oilPointer.setCenter(54, 45);
+		waterPointer = new RotateableImage("img/smallPointer.png", 70, 110, 102);
+		waterPointer.setCenter(54, 45);
 		
 		fuelPointer = new RotateableImage("img/smallPointer.png", 0, 60, 102);
 		fuelPointer.setCenter(54, 45);
@@ -83,6 +93,10 @@ public class DashboardPanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Odpowiada za wywo³ywanie metod w celu wyœwietlenia obrazów i ich animacji.
+	 * @param g obiekt klasy Graphics umo¿liwiaj¹cy rysowanie
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
@@ -107,10 +121,10 @@ public class DashboardPanel extends JPanel {
 		rpmPointer.setVal(car.getRpms());
 		g2d.drawImage(rpmPointer.getImg(), rpmPointer.getAt(), null);
 		
-		// Oil pointer
-		oilPointer.setTranslation(80, 389);
-		if(car.isRunning()) oilPointer.setVal(car.getOilTemp());
-		g2d.drawImage(oilPointer.getImg(), oilPointer.getAt(), null);
+		// Water pointer
+		waterPointer.setTranslation(80, 389);
+		if(car.isRunning()) waterPointer.setVal(car.getWaterTemp());
+		g2d.drawImage(waterPointer.getImg(), waterPointer.getAt(), null);
 		
 		// Fuel pointer
 		fuelPointer.setTranslation(810, 389);
@@ -149,13 +163,4 @@ public class DashboardPanel extends JPanel {
 		repaint();
 	}
 	
-	public BufferedImage LoadImage(String path) {
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return img;
-	}
 }
