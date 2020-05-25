@@ -12,11 +12,11 @@ import Data.Database;
 import Data.Travel;
 
 /**
- * Klasa reprezentuj¹ca samochód i komputer pok³adowy.
+ * Klasa reprezentujÄ…ca samochÃ³d i komputer pokÅ‚adowy.
  * 
- * Wykonuje operacje na takich wartoœciach jak przebieg ca³kowity, dystans, œrednie spalanie, prêdkoœæ, itd.
- * Pozwala operowaæ silnikiem, zmian¹ biegów, w³¹czaniem i wy³¹czaniem œwiate³.
- * Rejestruje podró¿e, które zaczynaj¹ siê po wywo³aniu metody {@link #start()}, a koñcz¹ {@link #stop()}
+ * Wykonuje operacje na takich wartoÅ›ciach jak przebieg caÅ‚kowity, dystans, Å›rednie spalanie, prÄ™dkoÅ›Ä‡, itd.
+ * Pozwala operowaÄ‡ silnikiem, zmianÄ… biegÃ³w, wÅ‚Ä…czaniem i wyÅ‚Ä…czaniem Å›wiateÅ‚.
+ * Rejestruje podrÃ³Å¼e, ktÃ³re zaczynajÄ… siÄ™ po wywoÅ‚aniu metody {@link #start()}, a koÅ„czÄ… {@link #stop()}
  * 
  * @version 1.1
  * @author Adam Kalisz
@@ -53,8 +53,8 @@ public class Car implements Cloneable, Serializable {
 	private long timeInSec;
 
 	/**
-	 * Konstruktor klasy Car. Ustawia domyœlne wartoœci oraz tworzy obiekt klasy Database do którego bêd¹ póŸniej zapisywane
-	 * dane z podró¿y.
+	 * Konstruktor klasy Car. Ustawia domyÅ›lne wartoÅ›ci oraz tworzy obiekt klasy Database do ktÃ³rego bÄ™dÄ… pÃ³Åºniej zapisywane
+	 * dane z podrÃ³Å¼y.
 	 */
 	public Car() {
 		distance = 0;
@@ -62,13 +62,13 @@ public class Car implements Cloneable, Serializable {
 		maxSpeed = 0;
 		currentSpeed = 0;
 		rpms = 0;
-		mileageTotal = 0; 
-		mileage1 = 0;
+		mileageTotal = 224564.1f; 
+		mileage1 = 123.33f;
 		mileage2 = 0;
 		gear = 0;
 		fixedSpeed = 0;
 		rpmMax = 7000;
-		waterTemp = 73;
+		waterTemp = 0;
 		fuel = 13;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -83,20 +83,22 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	/**
-	 * Ustawia datê i czas uruchomienia silnika, uruchamia silnik poprzez ustawienie flagi isRunning.
-	 * Tworzy obiekt currentTravel klasy Travel który przechowuje dane o aktualnej podró¿y.
+	 * Ustawia datÄ™ i czas uruchomienia silnika, uruchamia silnik poprzez ustawienie flagi isRunning.
+	 * Tworzy obiekt currentTravel klasy Travel ktÃ³ry przechowuje dane o aktualnej podrÃ³Å¼y.
 	 */
 	public void start() {
 		avgSpeed = 0;
+		maxSpeed = 0;
+		distance = 0;
 		setStartTime(LocalDateTime.now());
 		setRunning(true);
 		currentTravel = new Travel(0, mileageTotal, 0, LocalDateTime.now());
 	}
 	
 	/**
-	 * Wy³¹cza silnik, zapisuje przebyty dystans, œrednie zu¿ycie paliwa
-	 * oraz datê i czas zatrzymania silnika do obiektu currentTravel. 
-	 * Dodaje ostatni¹ podró¿ do bazy danych.
+	 * WyÅ‚Ä…cza silnik, zapisuje przebyty dystans, Å›rednie zuÅ¼ycie paliwa
+	 * oraz datÄ™ i czas zatrzymania silnika do obiektu currentTravel. 
+	 * Dodaje ostatniÄ… podrÃ³Å¼ do bazy danych.
 	 */
 	public void stop() {
 		if(getCurrentSpeed() >= 0) {
@@ -127,41 +129,60 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	/**
-	 * Zmienia bieg na wy¿szy.
-	 * Sprawdza czy mo¿liwa jest zmiana biegu na wy¿szy, jeœli tak to go zmienia oraz odpowiednio zmniejsza obroty silnika.
+	 * Zmienia bieg na wyÅ¼szy.
+	 * Sprawdza czy moÅ¼liwa jest zmiana biegu na wyÅ¼szy, jeÅ›li tak to go zmienia oraz odpowiednio zmniejsza obroty silnika.
 	 */
 	public void gearUp() {
 		if(gear < 6) {
 			gear++;
-			rpms /= 2;
+			rpms *= 0.5;
 		}
 	}
 	
 	/**
-	 * Zmienia bieg na ni¿szy.
-	 * Sprawdza czy mo¿liwa jest zmiana biegu na ni¿szy, jeœli tak to go zmienia oraz odpowiednio zwiêksza obroty silnika.
+	 * Zmienia bieg na niÅ¼szy.
+	 * Sprawdza czy moÅ¼liwa jest zmiana biegu na niÅ¼szy, jeÅ›li tak to go zmienia oraz odpowiednio zwiÄ™ksza obroty silnika.
 	 */
 	public void gearDown() {
 		if(gear > 0) {
 			gear--;
-			rpms += 600;
+			if(isRunning) rpms += 600;
 		}
 	}
 	
 	/**
-	 * Aktualizuje prêdkoœæ i dystans
+	 * Aktualizuje wartoÅ›ci komputera pokÅ‚adowego
 	 */
 	public void update() {
-		//avgSpeed += currentSpeed;
-		//System.out.println(avgSpeed / timeInSec + " " + timeInSec);		
+		if(currentSpeed > maxSpeed && isRunning) maxSpeed = currentSpeed;
+		// 1 sec distance
+		double diff = currentSpeed / 3.6 / 1000;
+		distance += diff;
+		mileage1 += diff;
+		mileage2 += diff;
+		mileageTotal += diff;
+		if(isRunning) avgSpeed = distance * 1000 / timeInSec * 3.6f;
+		if(waterTemp < 90) waterTemp++;
 	}
 	
-	
 	/**
-	 * Wykonywana cyklicznie, zwiêszka lub zminiejsza obroty silnika
-	 * w zale¿noœci od ustawionej prêdkoœci, podobnie jak w tempomacie.
+	 * Zwraca prÄ™dkoÅ›Ä‡ Å›redniÄ… od poczÄ…tku podrÃ³Å¼y
+	 * @return prÄ™dkoÅ›Ä‡ Å›rednia
+	 */
+	public float getAvgSpeed() {
+		return avgSpeed;
+	}
+
+	
+//	public void setTimeInSec(long timeInSec) {
+//		this.timeInSec = timeInSec;
+//	}
+
+	/**
+	 * Wykonywana cyklicznie, zwiÄ™szka lub zminiejsza obroty silnika
+	 * w zaleÅ¼noÅ›ci od ustawionej prÄ™dkoÅ›ci, podobnie jak w tempomacie.
 	 * 
-	 * @param desiredSpeed docelowa prêdkoœæ któr¹ chcemy osi¹gn¹æ
+	 * @param desiredSpeed docelowa prÄ™dkoÅ›Ä‡ ktÃ³rÄ… chcemy osiÄ…gnÄ…Ä‡
 	 */
 	public void accelerate(float desiredSpeed) {
 		this.currentSpeed = this.getCurrentSpeed();
@@ -172,22 +193,20 @@ public class Car implements Cloneable, Serializable {
 		if(rpms >= rpmMax) {
 			rpms = rpmMax - 150;
 		}
-		float diff = desiredSpeed > currentSpeed ? 0.7f : -0.8f;
+		float diff = desiredSpeed > currentSpeed ? 0.9f : -1.9f;
 		rpms += diff;
 	}
 	
 	/**
-	 * Oblicza czas pomiêdzy uruchomieniem i zatrzymaniem silnika (aktualnym czasem jeœli silnik jest uruchomiony).
+	 * Oblicza czas pomiÄ™dzy uruchomieniem i zatrzymaniem silnika (aktualnym czasem jeÅ›li silnik jest uruchomiony).
 	 * Zapisuje czas trwania do zmiennej totalTime w formacie godziny:minuty:sekundy.
-	 * @throws InvalidDateException wyj¹tek niepoprawnej daty
+	 * @throws InvalidDateException wyjÄ…tek niepoprawnej daty
 	 */
 	public void calculatePeriodRunning() throws InvalidDateException {
-		if(startTime == null) {
-			return;
-		}
+		if(startTime == null) return;
 		if(isRunning)stopTime = LocalDateTime.now();
-		
 		Duration duration = Duration.between(startTime, stopTime);
+		if(duration.getSeconds() < 0) throw new InvalidDateException();
 		timeInSec = duration.getSeconds();
 		totalTime = LocalTime.of((int)timeInSec / 360 % 24, (int)timeInSec / 60 % 60, (int)timeInSec % 60);
 	}
@@ -202,85 +221,85 @@ public class Car implements Cloneable, Serializable {
 	
 	/**
 	 * Zwraca aktualny biegu samochodu.
-	 * @return wartoœæ atualnego biegu samochodu jako String
+	 * @return wartoÅ›Ä‡ atualnego biegu samochodu jako String
 	 */
 	public String gearToString() {
 		return gear == 0 ? "N" : String.valueOf(this.gear);
 	}
 
 	/**
-	 * Ustawia iloœæ paliwa.
-	 * @param fuel iloœæ paliwa jako float
+	 * Ustawia iloÅ›Ä‡ paliwa.
+	 * @param fuel iloÅ›Ä‡ paliwa jako float
 	 */
 	public void setFuel(float fuel) {
 		this.fuel = fuel;
 	}
 	
 	/**
-	 * Zwraca przebieg ca³kowity.
-	 * @return zwraca iloœæ przebytych kilometrów jako float
+	 * Zwraca przebieg caÅ‚kowity.
+	 * @return zwraca iloÅ›Ä‡ przebytych kilometrÃ³w jako float
 	 */
 	public float getMileageTotal() {
 		return mileageTotal;
 	}
 
 	/**
-	 * Zwraca wartoœæ czasu jaki zosta³ uprzednio obliczony poprzez {@link #calculatePeriodRunning()}.
-	 * @return zwraca wartoœæ czasu jaki up³yn¹³ jako string w formacie: godziny:minuty:sekundy.
+	 * Zwraca wartoÅ›Ä‡ czasu jaki zostaÅ‚ uprzednio obliczony poprzez {@link #calculatePeriodRunning()}.
+	 * @return zwraca wartoÅ›Ä‡ czasu jaki upÅ‚ynÄ…Å‚ jako string w formacie: godziny:minuty:sekundy.
 	 */
 	public String getTotalTime() {
 		return totalTime.toString();
 	}
 	
 	/**
-	 * Dodaje do przebiegu podan¹ wartoœæ.
-	 * @param add zmienna typu float która zostanie dodana do przebiegu ca³kowitego
+	 * Dodaje do przebiegu podanÄ… wartoÅ›Ä‡.
+	 * @param add zmienna typu float ktÃ³ra zostanie dodana do przebiegu caÅ‚kowitego
 	 */
 	public void increaseMileageTotal(float add) {
 		this.mileageTotal += add;
 	}
 
 	/**
-	 * Zwraca wartoœæ pierwszego licznika dziennego.
-	 * @return zwraca iloœæ przebytych kilometrów jako float
+	 * Zwraca wartoÅ›Ä‡ pierwszego licznika dziennego.
+	 * @return zwraca iloÅ›Ä‡ przebytych kilometrÃ³w jako float
 	 */
 	public float getMileage1() {
 		return mileage1;
 	}
 
 	/**
-	 * Dodaje do pierwszego licznika dziennego podan¹ wartoœæ.
-	 * @param add zmienna typu float która zostanie dodana
+	 * Dodaje do pierwszego licznika dziennego podanÄ… wartoÅ›Ä‡.
+	 * @param add zmienna typu float ktÃ³ra zostanie dodana
 	 */
 	public void increaseMileage1(float add) {
 		this.mileage1 += add;
 	}
 	
 	/**
-	 * Resetuje wartoœæ pierwszego licznika dziennego.
+	 * Resetuje wartoÅ›Ä‡ pierwszego licznika dziennego.
 	 */
 	public void resetMileage1() {
 		this.mileage1 = 0;
 	}
 
 	/**
-	 * Zwraca wartoœæ drugiego licznika dziennego.
-	 * @return zwraca iloœæ przebytych kilometrów jako float
+	 * Zwraca wartoÅ›Ä‡ drugiego licznika dziennego.
+	 * @return zwraca iloÅ›Ä‡ przebytych kilometrÃ³w jako float
 	 */
 	public float getMileage2() {
 		return mileage2;
 	}
 	
 	/**
-	 * Dodaje do drugiego licznika dziennego podan¹ wartoœæ.
-	 * @param add zmienna typu float która zostanie dodana
+	 * Dodaje do drugiego licznika dziennego podanÄ… wartoÅ›Ä‡.
+	 * @param add zmienna typu float ktÃ³ra zostanie dodana
 	 */
 	public void increaseMileage2(float add) {
 		this.mileage2 += add;
 	}
 
 	/**
-	 * Resetuje wartoœæ drugiego licznika dziennego.
+	 * Resetuje wartoÅ›Ä‡ drugiego licznika dziennego.
 	 */
 	public void resetMileage2() {
 		this.mileage2 = 0;
@@ -288,64 +307,64 @@ public class Car implements Cloneable, Serializable {
 
 	/**
 	 * Zwraca przebyty dystans od uruchomienia silnika.
-	 * @return zwraca d³ugoœæ przebytego dystansu jako float
+	 * @return zwraca dÅ‚ugoÅ›Ä‡ przebytego dystansu jako float
 	 */
 	public float getDistance() {
 		return distance;
 	}
 
 	/**
-	 * Dodaje do odleg³oœci podró¿y podan¹ zmienn¹.
-	 * @param add zmienna typu float która zostanie dodana do dystansu aktualnej podró¿y
+	 * Dodaje do odlegÅ‚oÅ›ci podrÃ³Å¼y podanÄ… zmiennÄ….
+	 * @param add zmienna typu float ktÃ³ra zostanie dodana do dystansu aktualnej podrÃ³Å¼y
 	 */
 	public void increaseDistance(float add) {
 		this.distance += add;
 	}
 
 	/**
-	 * Zwraca œrednie zu¿ycie paliwa.
-	 * @return zwraca œrednie zu¿ycie paliwa jako float
+	 * Zwraca Å›rednie zuÅ¼ycie paliwa.
+	 * @return zwraca Å›rednie zuÅ¼ycie paliwa jako float
 	 */
 	public float getAvgFuelConsumption() {
 		return avgFuelConsumption;
 	}
 
 	/**
-	 * Ustawia œrednie zu¿ycie paliwa.
-	 * @param avgFuelConsumption œrednie zu¿ycie paliwa jako float
+	 * Ustawia Å›rednie zuÅ¼ycie paliwa.
+	 * @param avgFuelConsumption Å›rednie zuÅ¼ycie paliwa jako float
 	 */
 	public void setAvgFuelConsumption(float avgFuelConsumption) {
 		this.avgFuelConsumption = avgFuelConsumption;
 	}
 
 	/**
-	 * Zwraca maksymaln¹ prêdkoœæ.
-	 * @return zwraca maksymaln¹ prêdkoœæ jako float
+	 * Zwraca maksymalnÄ… prÄ™dkoÅ›Ä‡.
+	 * @return zwraca maksymalnÄ… prÄ™dkoÅ›Ä‡ jako float
 	 */
 	public float getMaxSpeed() {
 		return maxSpeed;
 	}
 
 	/**
-	 * Ustawia maksynaln¹ prêdkoœæ.
-	 * @param maxSpeed maksymaln¹ prêdkoœæ jako float
+	 * Ustawia maksynalnÄ… prÄ™dkoÅ›Ä‡.
+	 * @param maxSpeed maksymalnÄ… prÄ™dkoÅ›Ä‡ jako float
 	 */
 	public void setMaxSpeed(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
 
 	/**
-	 * Oblicza aktualn¹ prêdkoœæ.
-	 * Iloczyn obrotów silnika i wartoœci odpowiadaj¹cej biegu samochodu.
-	 * @return zwraca aktualn¹ prêdkoœæ jako float
+	 * Oblicza aktualnÄ… prÄ™dkoÅ›Ä‡.
+	 * Iloczyn obrotÃ³w silnika i wartoÅ›ci odpowiadajÄ…cej biegu samochodu.
+	 * @return zwraca aktualnÄ… prÄ™dkoÅ›Ä‡ jako float
 	 */
 	public float getCurrentSpeed() {
 		return rpms * gearRatios[gear];
 	}
 
 	/**
-	 * Ustawia aktualn¹ prêdkoœæ.
-	 * @param currentSpeed aktualna prêdkoœæ
+	 * Ustawia aktualnÄ… prÄ™dkoÅ›Ä‡.
+	 * @param currentSpeed aktualna prÄ™dkoÅ›Ä‡
 	 */
 	public void setCurrentSpeed(float currentSpeed) {
 		this.currentSpeed = currentSpeed;
@@ -384,7 +403,7 @@ public class Car implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Stan silnika (w³¹czony/wy³¹czony).
+	 * Stan silnika (wÅ‚Ä…czony/wyÅ‚Ä…czony).
 	 * @return Zwraca aktualny stan silnika jako true/false.
 	 */
 	public boolean isRunning() {
@@ -401,7 +420,7 @@ public class Car implements Cloneable, Serializable {
 
 	/**
 	 * Zwraca czas uruchomienia silnika.
-	 * @return czas pocz¹tkowy jako String
+	 * @return czas poczÄ…tkowy jako String
 	 */
 	public String getStartTime() {
 		return startTime.format(timeFormat);
@@ -409,7 +428,7 @@ public class Car implements Cloneable, Serializable {
 
 	/**
 	 * Ustawia czas startu silnika.
-	 * @param startTime czas pocz¹tkowy
+	 * @param startTime czas poczÄ…tkowy
 	 */
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
@@ -440,55 +459,55 @@ public class Car implements Cloneable, Serializable {
 	}
 
 	/**
-	 * Zwraca prêdkoœæ ustawion¹ na tempomacie.
-	 * @return prêdkoœæ ustawiona na tempomacie jako float
+	 * Zwraca prÄ™dkoÅ›Ä‡ ustawionÄ… na tempomacie.
+	 * @return prÄ™dkoÅ›Ä‡ ustawiona na tempomacie jako float
 	 */
 	public float getFixedSpeed() {
 		return fixedSpeed;
 	}
 
 	/**
-	 * Ustawia prêdkoœæ na tempomacie.
-	 * @param fixedSpeed prêdkoœæ na tempomacie jako float
+	 * Ustawia prÄ™dkoÅ›Ä‡ na tempomacie.
+	 * @param fixedSpeed prÄ™dkoÅ›Ä‡ na tempomacie jako float
 	 */
 	public void setFixedSpeed(float fixedSpeed) {
 		this.fixedSpeed = fixedSpeed;
 	}
 
 	/**
-	 * Zwraca temperaturê p³ynu ch³odniczego.
-	 * @return temperatura p³ynu ch³odniczego jako float
+	 * Zwraca temperaturÄ™ pÅ‚ynu chÅ‚odniczego.
+	 * @return temperatura pÅ‚ynu chÅ‚odniczego jako float
 	 */
 	public float getWaterTemp() {
 		return waterTemp;
 	}
 
 	/**
-	 * Ustawia temperaturê p³ynu ch³odniczego.
-	 * @param waterTemp temperatura p³ynu ch³odniczego jako float
+	 * Ustawia temperaturÄ™ pÅ‚ynu chÅ‚odniczego.
+	 * @param waterTemp temperatura pÅ‚ynu chÅ‚odniczego jako float
 	 */
 	public void setWaterTemp(float waterTemp) {
 		this.waterTemp = waterTemp;
 	}
 
 	/**
-	 * Zwraca iloœæ paliwa.
-	 * @return iloœæ paliwa jako float
+	 * Zwraca iloÅ›Ä‡ paliwa.
+	 * @return iloÅ›Ä‡ paliwa jako float
 	 */
 	public float getFuel() {
 		return fuel;
 	}
 
 	/**
-	 * Zwraca listê zapisanych podró¿y.
-	 * @return zapisane podró¿e
+	 * Zwraca listÄ™ zapisanych podrÃ³Å¼y.
+	 * @return zapisane podrÃ³Å¼e
 	 */
 	public ArrayList<Travel> getTravels() {
 		return travels;
 	}
 	
 	/**
-	 * Zwraca czas jaki up³yn¹³ od uruchomienia silnika.
+	 * Zwraca czas jaki upÅ‚ynÄ…Å‚ od uruchomienia silnika.
 	 * @return timeInSec czas w sekundach
 	 */
 	public long getTimeInSec() {
@@ -496,7 +515,7 @@ public class Car implements Cloneable, Serializable {
 	}
 	
 	/**
-	 * Zwraca obiekt klasy Databse, reprezentuj¹cy bazê danych.
+	 * Zwraca obiekt klasy Databse, reprezentujÄ…cy bazÄ™ danych.
 	 * @return obiekt klasy Database
 	 */
 	public Database getDb() {

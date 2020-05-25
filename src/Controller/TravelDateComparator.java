@@ -4,7 +4,7 @@ import java.util.Comparator;
 import Data.Travel;
 
 /**
- * Klasa s³u¿y do porównywania obiektów klasy Travel na podstawie dat pocz¹tkowych.
+ * Klasa s³u¿y do porównywania obiektów klasy Travel na podstawie dat pocz¹kowych.
  * Implementuje interfejs Comparator.
  * @author Adam Kalisz
  * @author Kamil Rojszczak
@@ -13,7 +13,7 @@ import Data.Travel;
 public class TravelDateComparator implements Comparator<Travel> {
 
 	/**
-	 * Porównuje ze sob¹ 2 argumenty klasy Travel
+	 * Porównuje ze sob¹ dwa obiekty klasy Travel
 	 * @param o1 pierwszy argument klasy Travel
 	 * @param o2 drugi argument klasy Travel
 	 * @return zwraca wartoœci 1, 0 lub -1 w zale¿noœci czy pierwszy argument jest wiêkszy, równy lub mniejszy od drugiego 

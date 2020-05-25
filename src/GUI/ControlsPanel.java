@@ -52,6 +52,10 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	private JLabel JLtimeVal;
 	private JLabel JLavgSpeed;
 	private JLabel JLavgSpeedVal;
+	private JLabel JLdistance;
+	private JLabel JLdistanceVal;
+	private JLabel JLmaxSpeed;
+	private JLabel JLmaxSpeedVal;
 	
 	/**
 	 * Konstruktor odpowiada za stworzenie i wyœwietlenie na panelu, elementów takich jak napisy, 
@@ -223,13 +227,13 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JLfuelConsumptionVal.setBounds(655, 66, 105, 66);
 		add(JLfuelConsumptionVal);
 		
-		JLtime = new JLabel("Distance", JLabel.CENTER);
-		JLtime.setBounds(560, 133, 105, 66);
-		add(JLtime);
+		JLdistance = new JLabel("Distance", JLabel.CENTER);
+		JLdistance.setBounds(560, 133, 105, 66);
+		add(JLdistance);
 		
-		JLtimeVal = new JLabel("0.0 km", JLabel.CENTER);
-		JLtimeVal.setBounds(655, 133, 105, 66);
-		add(JLtimeVal);
+		JLdistanceVal = new JLabel("0.0 km", JLabel.CENTER);
+		JLdistanceVal.setBounds(655, 133, 105, 66);
+		add(JLdistanceVal);
 		
 		//
 		JLavgSpeed = new JLabel("Avg. speed", JLabel.CENTER);
@@ -240,13 +244,13 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JLavgSpeedVal.setBounds(655+225, 0, 105, 66);
 		add(JLavgSpeedVal);
 		
-		JLfuelConsumption = new JLabel("Max speed", JLabel.CENTER);
-		JLfuelConsumption.setBounds(560+215, 66, 105, 66);
-		add(JLfuelConsumption);
+		JLmaxSpeed = new JLabel("Max speed", JLabel.CENTER);
+		JLmaxSpeed.setBounds(560+215, 66, 105, 66);
+		add(JLmaxSpeed);
 		
-		JLfuelConsumptionVal = new JLabel("0.0 km/h", JLabel.CENTER);
-		JLfuelConsumptionVal.setBounds(655+225, 66, 105, 66);
-		add(JLfuelConsumptionVal);
+		JLmaxSpeedVal = new JLabel("0.0 km/h", JLabel.CENTER);
+		JLmaxSpeedVal.setBounds(655+225, 66, 105, 66);
+		add(JLmaxSpeedVal);
 		
 		JLtime = new JLabel("Time running", JLabel.CENTER);
 		JLtime.setBounds(560+215, 133, 105, 66);
@@ -272,17 +276,29 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		g.drawLine(550, 66, 1000, 66);
 		g.drawLine(550, 133, 1000, 133);
 		
+		// Current gear label
 		JLgearVal.setText(car.gearToString());
 		
+		// Time running
 		String timeVal = new String();
 		try {
 			timeVal = car.getTotalTime();			
 		} catch (NullPointerException e) {
-			timeVal= "00:00";
+			timeVal= "00:00:00";
 		}
 		
+		if(timeVal.length() == 5) timeVal += ":00";
 		JLtimeVal.setText(timeVal);
+		
+		// Max speed
+		JLmaxSpeedVal.setText(String.valueOf((int)car.getMaxSpeed()) + " km/h");
 		repaint();
+		
+		// Avg speed
+		JLavgSpeedVal.setText(String.valueOf((int)car.getAvgSpeed()) + " km/h");
+		
+		// Distance 
+		JLdistanceVal.setText(String.valueOf(String.format("%.2f", car.getDistance())) + " km");
 	}
 
 	/**

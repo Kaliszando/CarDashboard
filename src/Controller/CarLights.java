@@ -65,6 +65,9 @@ public class CarLights implements Cloneable, Serializable {
 		else {
 			runningLights.turnOn();
 			lowBeamLights.turnOff();
+			highBeamLights.turnOff();
+			frontFogLights.turnOff();
+			rearFogLights.turnOff();
 		}
 		lightsOn = runningLights.isOn();
 	}

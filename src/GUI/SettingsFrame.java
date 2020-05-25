@@ -19,10 +19,10 @@ import javax.swing.JTextField;
  */
 public class SettingsFrame extends JFrame implements ActionListener {
 
-	JMenu menu1, menu2, menu3, menu4, subMenu;
-	JMenuBar menuBar;
-	JTextField text;
-	JMenuItem item1, item2, item3, item4, item5, item6, item7, item8;
+	private JMenu menu1, menu2, menu3, menu4, subMenu;
+	private JMenuBar menuBar;
+	private JTextField text;
+	private JMenuItem item1, item2, item3, item4, item5, item6, item7, item8;
 	
 	/**
 	 * Tworzy okno ustawieñ.
