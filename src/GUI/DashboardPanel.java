@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -15,7 +16,7 @@ import Controller.Car;
 import Controller.InvalidDateException;
 
 /**
- * Klasa odpowiada za wyœwietlanie tablicy rozdzielczej, wskazówek prêdkoœciomierza i obrotomierza, liczników.
+ * Klasa odpowiada za wyï¿½wietlanie tablicy rozdzielczej, wskazï¿½wek prï¿½dkoï¿½ciomierza i obrotomierza, licznikï¿½w.
  * 
  * @author Adam Kalisz
  * @author Kamil Rojszczak
@@ -32,15 +33,17 @@ public class DashboardPanel extends JPanel {
 	private JLabel JLmileage1;
 	private Font font1, font2;
 	private JLabel JLmileage2;
+	private int interval;
 	
 	/**
-	 * £aduje obrazy t³a, kontrolek, wskazówek oraz okreœla ich rozmieszczenie.
-	 * Ustawia równie¿ rozmieszczenie i wygl¹d liczników dziennych i przebiegu.
+	 * ï¿½aduje obrazy tï¿½a, kontrolek, wskazï¿½wek oraz okreï¿½la ich rozmieszczenie.
+	 * Ustawia rï¿½wnieï¿½ rozmieszczenie i wyglï¿½d licznikï¿½w dziennych i przebiegu.
 	 * @param car obiekt klasy Car
 	 */
 	public DashboardPanel(Car car) {
 		setLayout(null);
 		this.car = car;
+		interval = 1;
 		
 		// Loading images
 		try {
@@ -94,22 +97,13 @@ public class DashboardPanel extends JPanel {
 	}
 	
 	/**
-	 * Odpowiada za wywo³ywanie metod w celu wyœwietlenia obrazów i ich animacji.
-	 * @param g obiekt klasy Graphics umo¿liwiaj¹cy rysowanie
+	 * Odpowiada za wywoï¿½ywanie metod w celu wyï¿½wietlenia obrazï¿½w i ich animacji.
+	 * @param g obiekt klasy Graphics umoï¿½liwiajï¿½cy rysowanie
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g.drawImage(dashboard, 0, 0, null);
-		
-		// Car
-		car.accelerate(car.getFixedSpeed());
-		try {
-			car.calculatePeriodRunning();
-		} catch (InvalidDateException e) {
-			e.printStackTrace();
-		}
-		car.update();
 		
 		// Speed pointer
 		speedPointer.setTranslation(236, 253);
@@ -132,8 +126,22 @@ public class DashboardPanel extends JPanel {
 		g2d.drawImage(fuelPointer.getImg(), fuelPointer.getAt(), null);
 		
 		// Blinkers
-		if(car.getLights().getLeftBlinker().isOn())	g.drawImage(leftBlinker, 445, 120, null);
-		if(car.getLights().getRightBlinker().isOn()) g.drawImage(rightBlinker, 500, 120, null);		
+		if(car.getLights().getLeftBlinker().isOn() && LocalDateTime.now().getSecond() % 2 == 0)	g.drawImage(leftBlinker, 445, 120, null);
+		if(car.getLights().getRightBlinker().isOn() && LocalDateTime.now().getSecond() % 2 == 0) g.drawImage(rightBlinker, 500, 120, null);		
+		
+		// Car
+		car.accelerate(car.getFixedSpeed());
+		try {
+			car.calculatePeriodRunning();
+		} catch (InvalidDateException e) {
+			e.printStackTrace();
+		}
+		
+		if(interval == car.getTimeInSec()) {
+			interval++;
+			car.update();
+			System.out.println(car.getWaterTemp());
+		}
 		
 		// Dashboard lights
 		if(car.getLights().getLowBeamLights().isOn()) g.drawImage(lowBeams, 380, 435, null);
@@ -146,14 +154,15 @@ public class DashboardPanel extends JPanel {
 			g.drawImage(checkEngine, 260, 435, null);
 			g.drawImage(battery, 320, 435, null);
 			
+			// Mileage labels
 			JLmileage2.setVisible(false);
 			JLmileage1.setVisible(false);
 			JLmileageTotal.setVisible(false);
 		}
 		else {
-			JLmileage1.setText(String.valueOf(car.getMileage1()));
-			JLmileage2.setText(String.valueOf(car.getMileage2()));
-			JLmileageTotal.setText(String.valueOf(car.getMileageTotal()));
+			JLmileage1.setText(String.valueOf(String.format("%.2f", car.getMileage1())));
+			JLmileage2.setText(String.valueOf(String.format("%.2f", car.getMileage2())));
+			JLmileageTotal.setText(String.valueOf(String.format("%.1f", car.getMileageTotal())));
 			
 			JLmileage2.setVisible(true);
 			JLmileage1.setVisible(true);
