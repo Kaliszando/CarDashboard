@@ -1,5 +1,6 @@
 # CarDashboard
 Project for component programming classes
 
-External libraries:
+External JARs:
 - XStream
+- JDBC
