@@ -16,7 +16,7 @@ import Controller.Car;
 import Controller.InvalidDateException;
 
 /**
- * Klasa odpowiada za wyï¿½wietlanie tablicy rozdzielczej, wskazï¿½wek prï¿½dkoï¿½ciomierza i obrotomierza, licznikï¿½w.
+ * Klasa odpowiada za wyœwietlanie tablicy rozdzielczej, wskazówek prêdkoœciomierza i obrotomierza, liczników.
  * 
  * @author Adam Kalisz
  * @author Kamil Rojszczak
@@ -36,8 +36,8 @@ public class DashboardPanel extends JPanel {
 	private int interval;
 	
 	/**
-	 * ï¿½aduje obrazy tï¿½a, kontrolek, wskazï¿½wek oraz okreï¿½la ich rozmieszczenie.
-	 * Ustawia rï¿½wnieï¿½ rozmieszczenie i wyglï¿½d licznikï¿½w dziennych i przebiegu.
+	 * £aduje obrazy t³a, kontrolek, wskazówek oraz okreœla ich rozmieszczenie.
+	 * Ustawia równie¿ rozmieszczenie i wygl¹d liczników dziennych i przebiegu.
 	 * @param car obiekt klasy Car
 	 */
 	public DashboardPanel(Car car) {
@@ -70,7 +70,7 @@ public class DashboardPanel extends JPanel {
 		rpmPointer = new RotateableImage("img/bigPointer.png", 0, 7000, 258);
 		rpmPointer.setCenter(99, 24);
 
-		waterPointer = new RotateableImage("img/smallPointer.png", 70, 110, 102);
+		waterPointer = new RotateableImage("img/smallPointer.png", 0, 40, 102);
 		waterPointer.setCenter(54, 45);
 		
 		fuelPointer = new RotateableImage("img/smallPointer.png", 0, 60, 102);
@@ -97,8 +97,8 @@ public class DashboardPanel extends JPanel {
 	}
 	
 	/**
-	 * Odpowiada za wywoï¿½ywanie metod w celu wyï¿½wietlenia obrazï¿½w i ich animacji.
-	 * @param g obiekt klasy Graphics umoï¿½liwiajï¿½cy rysowanie
+	 * Odpowiada za wywo³anie metod w celu wyœwietlania obrazów i ich animacji.
+	 * @param g obiekt klasy Graphics umo¿liwiaj¹cy rysowanie
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -140,7 +140,6 @@ public class DashboardPanel extends JPanel {
 		if(interval == car.getTimeInSec()) {
 			interval++;
 			car.update();
-			System.out.println(car.getWaterTemp());
 		}
 		
 		// Dashboard lights
