@@ -47,7 +47,7 @@ public class XMLFileManager implements FileManagerInterface {
 	 */
 	@Override
 	public Object readFromFile(String path) throws IOException, ClassNotFoundException {
-		Class<?>[] classes = new Class[] { Data.Travel.class };
+		Class<?>[] classes = new Class[] { Data.Travel.class, Data.CarSettings.class };
 		XStream.setupDefaultSecurity(xs);
 		xs.allowTypes(classes);
 		

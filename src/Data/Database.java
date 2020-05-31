@@ -98,7 +98,7 @@ public class Database {
 	 */
 	public ArrayList<Travel> retrieveTravels() throws SQLException {
 		ArrayList<Travel> databaseTravels = new ArrayList<Travel>();	
-		ResultSet rs = statement.executeQuery("SELECT * FROM Travels");
+		ResultSet rs = statement.executeQuery("SELECT * FROM Travels ORDER BY startDate DESC");
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.0");
 

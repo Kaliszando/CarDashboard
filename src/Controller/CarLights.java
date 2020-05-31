@@ -1,7 +1,5 @@
 package Controller;
 
-import java.io.Serializable;
-
 /**
  * Klasa zarz¹dza klasami odpowiedzialnymi za œwiat³a samochodu.
  * 
@@ -13,9 +11,8 @@ import java.io.Serializable;
  * @version 1.0
  * 
  */
-public class CarLights implements Cloneable, Serializable {
+public class CarLights {
 	
-	private static final long serialVersionUID = -4304452317729176974L;
 	private LowBeamLights lowBeamLights;
 	private HighBeamLights highBeamLights;
 	private RunningLights runningLights;
@@ -164,14 +161,6 @@ public class CarLights implements Cloneable, Serializable {
 		return info;
 	}
 	
-	/**
-	 * Klonuje obiekt.
-	 * @return sklonowany obiekt
-	 */
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
 
 	/**
 	 * Zwraca obiekt reprezentuj¹cy œwiat³a mijania.

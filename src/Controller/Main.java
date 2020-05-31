@@ -1,7 +1,11 @@
 package Controller;
 
+import java.io.IOException;
+
 import javax.swing.SwingUtilities;
 
+import Data.CarSettings;
+import Data.XMLFileManager;
 import GUI.MainFrame;
 
 /**
@@ -33,7 +37,6 @@ public class Main {
 		}
 		else if(args[0].compareTo("-e") == 0 || args[0].compareTo("--emergency") == 0) {
 			System.out.println("Console");
-			Car car = new Car();
 		}
 		else {
 			System.out.println("Option '" + args[0] + "' unrecognized");

@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame(Car car) {
 		super("Car dashboard");
-		
+		setResizable(false);
 		setLayout(new BorderLayout());
 		
 		menuPanel = new MenuPanel(car);
@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
 		add(controlsPanel, BorderLayout.PAGE_END);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1015, 790);
+		setSize(1000, 770);
 		setVisible(true);
 	}
 

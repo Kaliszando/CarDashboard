@@ -1,6 +1,6 @@
 package Controller;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -8,8 +8,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import Data.CarSettings;
 import Data.Database;
 import Data.Travel;
+import Data.XMLFileManager;
 
 /**
  * Klasa reprezentuj¹ca samochód i komputer pok³adowy.
@@ -24,9 +26,8 @@ import Data.Travel;
  * 
  */
 
-public class Car implements Cloneable, Serializable {
-	
-	private static final long serialVersionUID = -2060576986212609784L;	
+public class Car {
+		
 	private float mileageTotal;
 	private float mileage1;
 	private float mileage2;
@@ -52,6 +53,8 @@ public class Car implements Cloneable, Serializable {
 	private Travel currentTravel;
 	private Database db;
 	private long timeInSec;
+	private CarSettings settings;
+	private float maxFuel;
 
 	/**
 	 * Konstruktor klasy Car. Ustawia domyœlne wartoœci oraz tworzy obiekt klasy Database do którego bêd¹ póŸniej zapisywane
@@ -63,23 +66,35 @@ public class Car implements Cloneable, Serializable {
 		maxSpeed = 0;
 		currentSpeed = 0;
 		rpms = 0;
-		mileageTotal = 224564.1f; 
-		mileage1 = 123.33f;
+		mileageTotal = 0;
+		mileage1 = 0;
 		mileage2 = 0;
 		gear = 0;
 		fixedSpeed = 0;
 		rpmMax = 7000;
 		waterTemp = 0;
-		fuel = 13;
+		fuel = 10;
+		fuelConsumed = 0;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 		travels = new ArrayList<>();
+		maxFuel = 60;
 		
+		// Connecting to database
 		try {
 			db = new Database();
-			System.out.println("Database connected successfuly");
 		} catch (SQLException e) {
 			System.out.println("Connecting to database failed");
+		}
+		
+		// Loading backup
+		XMLFileManager fm = new XMLFileManager();
+		try {
+			settings = (CarSettings) fm.readFromFile("bac/backup.dat");
+			this.retrieveSettings(settings);
+		} catch (ClassNotFoundException | IOException e) {
+			// Default settings stay the same
+			System.out.println("Loading backup file was unsuccesful");
 		}
 	}
 	
@@ -119,12 +134,16 @@ public class Car implements Cloneable, Serializable {
 			System.out.println(currentTravel.toString());
 			travels.add(currentTravel);
 			
+			// Updating database
 			try {
 				db.addTravel(currentTravel);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
+			// Saving settings
+			applySettings();
+			saveSettings("bac/backup.dat");
 			return;
 		}
 	}
@@ -156,17 +175,23 @@ public class Car implements Cloneable, Serializable {
 	 */
 	public void update() {
 		if(currentSpeed > maxSpeed && isRunning) maxSpeed = currentSpeed;
-		// 1 sec distance
-		double diff = currentSpeed / 3.6 / 1000;
-		distance += diff;
-		mileage1 += diff;
-		mileage2 += diff;
-		mileageTotal += diff;
+		// 1 sec distance difference
+		double distanceDiff = currentSpeed / 3.6 / 1000;
+		float fuelDiff = 0;
+		distance += distanceDiff;
+		mileage1 += distanceDiff;
+		mileage2 += distanceDiff;
+		mileageTotal += distanceDiff;
 		if(isRunning) avgSpeed = distance * 1000 / timeInSec * 3.6f;
-		if(waterTemp < 20) waterTemp += 0.1;
-		if(rpms < 2000) fuelConsumed = (float) (0.5 / 3600);
-		else if(rpms > 5000) fuelConsumed = (float) (0.7 / 3600);
-		else fuelConsumed = (float) (0.2 / 3600);
+		if(waterTemp < 20 && rpms > 100) waterTemp += 0.1;
+		if(rpms > 0) {
+			if(rpms < 2000) fuelDiff = (float) (9.5 / 3600);
+			else if(rpms > 5000) fuelDiff = (float) (15.7 / 3600);
+			else fuelDiff = (float) (6.2 / 3600);
+			fuelConsumed += fuelDiff;
+		}
+		avgFuelConsumption = fuelConsumed * 3600 / timeInSec;
+		fuel -= fuelDiff;
 	}
 	
 	/**
@@ -194,6 +219,55 @@ public class Car implements Cloneable, Serializable {
 		}
 		float diff = desiredSpeed > currentSpeed ? 0.9f : -1.9f;
 		rpms += diff;
+		if(rpms < 0) rpms = 0;
+	}
+	
+	/**
+	 * Przywraca ustawienia z odczytanego przedniej obiektu CarSettings.
+	 * 
+	 * @param backup obiekt klasy CarSettings z danymi które chcemy przywróciæ
+	 */
+	public void retrieveSettings(CarSettings backup) {
+		this.mileageTotal = backup.getMileageTotal();
+		this.mileage1 = backup.getMileage1();
+		this.mileage2 = backup.getMileage2();
+		this.fuel = backup.getFuel();
+	}
+	
+	/**
+	 * Zapisuje ustawienia zapisane w obiekcie klasy CarSettings.
+	 * @param path œcie¿ka zapisu
+	 */
+	public void saveSettings(String path) {
+		XMLFileManager fm = new XMLFileManager();
+		try {
+			fm.saveToFile(settings, path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Zwraca ustawienie akutalnie zachowane w obiekcie klasy Car.
+	 * @return zachowane ustawienia
+	 */
+	public CarSettings getSettings() {
+		return settings;
+	}
+	
+	/**
+	 * Ustawia aktualne wartoœci przebiegu i paliwa do zmiennej CarSettings.
+	 */
+	public void applySettings() {
+		settings = new CarSettings(this);
+	}
+
+	/**
+	 * Zeruje wszystkie wartoœci zachowanych ustawieñ samochodu.
+	 * 
+	 */
+	public void resetSettings() {
+		this.settings = new CarSettings();
 	}
 	
 	/**
@@ -209,14 +283,6 @@ public class Car implements Cloneable, Serializable {
 		timeInSec = duration.getSeconds();
 		totalTime = LocalTime.of((int)timeInSec / 360 % 24, (int)timeInSec / 60 % 60, (int)timeInSec % 60);
 	}
-
-	/**
-	 * Klonuje obiekt.
-	 */
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
 	
 	/**
 	 * Zwraca aktualny biegu samochodu.
@@ -231,6 +297,7 @@ public class Car implements Cloneable, Serializable {
 	 * @param fuel iloœæ paliwa jako float
 	 */
 	public void setFuel(float fuel) {
+		if(fuel > maxFuel) return;
 		this.fuel = fuel;
 	}
 	
