@@ -235,7 +235,7 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		JLdistanceVal.setBounds(655, 133, 105, 66);
 		add(JLdistanceVal);
 		
-		//
+		// Dashboard computer part 2
 		JLavgSpeed = new JLabel("Avg. speed", JLabel.CENTER);
 		JLavgSpeed.setBounds(560+215, 0, 105, 66);
 		add(JLavgSpeed);
@@ -299,6 +299,9 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		
 		// Distance 
 		JLdistanceVal.setText(String.valueOf(String.format("%.2f", car.getDistance())) + " km");
+		
+		// Fuel consumption
+		JLfuelConsumptionVal.setText(String.valueOf(String.format("%.1f", car.getAvgFuelConsumption())) + " l/h");
 	}
 
 	/**
@@ -342,7 +345,9 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	@Override
 	public void stateChanged(ChangeEvent evt) {
         if (evt.getSource() == JSthrottle && car.isRunning()) {
-        		car.setFixedSpeed(JSthrottle.getValue());
+        		float speedVal = JSthrottle.getValue();
+        		if(speedVal < 0) speedVal = 0;
+        		car.setFixedSpeed(speedVal);
         } 
 	}
 	

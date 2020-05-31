@@ -40,7 +40,7 @@ public class TravelHistoryFrame extends JFrame implements ActionListener {
 		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("Distance [km]");
 		columnNames.add("Mileage total [km]");
-		columnNames.add("Avg. fuel consumption [l/km]");
+		columnNames.add("Avg. fuel consumption [l/h]");
 		columnNames.add("Start date");
 		columnNames.add("End date");		
 		
