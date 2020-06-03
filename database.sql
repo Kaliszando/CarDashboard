@@ -14,15 +14,18 @@ CREATE TABLE Travels (
 )
 
 SELECT * FROM Travels
-WHERE distance='0';
+WHERE distance='0' OR avgFuelConsumption='0';
 
 DELETE FROM Travels WHERE distance = 0;
+DELETE FROM Travels WHERE id = 24;
+DELETE FROM Travels WHERE mileageTotal = 0;
+DELETE FROM Travels WHERE avgFuelConsumption = 0;
 
 SELECT * FROM Travels
 ORDER BY startDate;
 
-SELECT * FROM Travels
-WHERE startDate LIKE MIN(Travels.startDate);
+SELECT id FROM Travels
+WHERE startDate='2020-06-01 23:51:49' AND endDate='2020-06-01 23:51:52';
 
 SELECT MIN(Travels.startDate) FROM Travels;
 

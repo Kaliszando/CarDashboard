@@ -70,14 +70,29 @@ public class Database {
 		pstmt.executeUpdate();
 		if (pstmt != null) pstmt.close();
 	}
-	
+
+	public int getTravelId(String start, String stop) {
+		try {
+			ResultSet rs = statement.executeQuery("SELECT id FROM Travels WHERE startDate='" + start + "' AND endDate='" + stop + "';");
+			int id = -1;
+			while (rs.next()) {
+				id = rs.getInt(1);
+			}
+			return id;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 	/**
-	 * Usuwa z bazy danych wpisy których przebyty dystans wynosi 0.
+	 * Usuwa z bazy danych wpisy których przebyty dystans lub œrednie spalanie wynosi 0.
+	 * Historia podró¿y przechowuje wszystkie uruchchomienia pojazdu, nawet gdy dystans równy jest zeru.
+	 * Mo¿liwoœæ usuniêcia takich wpisów pozostaje w rêkach u¿ytkownika.
 	 * @throws SQLException wyjatek nieudanej operacji na bazie danych
 	 */
 	public void removeEmptyTravels() throws SQLException {
 		PreparedStatement pstmt = null;
-		pstmt = connection.prepareStatement("DELETE FROM Travels WHERE distance='0';");
+		pstmt = connection.prepareStatement("DELETE FROM Travels WHERE distance='0' OR avgFuelConsumption='0';");
 		pstmt.executeUpdate();
 		if (pstmt != null) pstmt.close();
 	}
