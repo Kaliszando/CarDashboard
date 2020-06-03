@@ -1,9 +1,12 @@
 package GUI;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,7 +28,6 @@ import Controller.InvalidDateException;
  */
 public class DashboardPanel extends JPanel {
 	
-	private static final long serialVersionUID = -5399476276986171865L;
 	private Image dashboard, leftBlinker, rightBlinker, checkEngine, parkingLights, lowBeams, highBeams, battery, hazards, frontFogLights, rearFogLights;
 	private RotateableImage speedPointer, rpmPointer, waterPointer, fuelPointer;
 	private Car car;
@@ -122,7 +124,14 @@ public class DashboardPanel extends JPanel {
 		
 		// Fuel pointer
 		fuelPointer.setTranslation(810, 389);
-		if(car.isRunning()) fuelPointer.setVal(car.getFuel());	
+		if(car.isRunning()) fuelPointer.setVal(car.getFuel());
+		if(car.isRunning() && car.getFuel() < car.getMaxFuel() / 10) {
+			g.setColor(Color.ORANGE);
+			if(car.getFuel() < car.getMaxFuel() / 20) g.setColor(Color.RED);
+			g.fillOval(810, 437, 8, 8);
+			g.setColor(Color.BLACK);
+			g.drawOval(810, 437, 8, 8);
+		}
 		g2d.drawImage(fuelPointer.getImg(), fuelPointer.getAt(), null);
 		
 		// Blinkers

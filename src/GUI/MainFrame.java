@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +32,10 @@ public class MainFrame extends JFrame {
 		super("Car dashboard");
 		setResizable(false);
 		setLayout(new BorderLayout());
+		setSize(1000, 770);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2 - this.getWidth()/2, dim.height/2 - this.getHeight()/2);
 		
 		menuPanel = new MenuPanel(car);
 		dashboardPanel = new DashboardPanel(car);
@@ -40,7 +46,6 @@ public class MainFrame extends JFrame {
 		add(controlsPanel, BorderLayout.PAGE_END);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1000, 770);
 		setVisible(true);
 	}
 

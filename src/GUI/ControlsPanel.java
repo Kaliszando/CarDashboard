@@ -67,6 +67,7 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 		setLayout(null);
 		setPreferredSize(new Dimension(1000, 200));
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
+	
 		
 		// Slider
 		JSthrottle = new JSlider(JSlider.VERTICAL, 0, 200, 0);

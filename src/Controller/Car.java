@@ -20,7 +20,7 @@ import Data.XMLFileManager;
  * Pozwala operowaæ silnikiem, zmian¹ biegów, w³¹czaniem i wy³¹czaniem œwiate³.
  * Rejestruje podró¿e, które zaczynaj¹ siê po wywo³aniu metody {@link #start()}, a koñcz¹ {@link #stop()}
  * 
- * @version 1.1
+ * @version 1.2
  * @author Adam Kalisz
  * @author Kamil Rojszczak
  * 
@@ -97,7 +97,7 @@ public class Car {
 			System.out.println("Loading backup file was unsuccesful");
 		}
 	}
-	
+
 	/**
 	 * Ustawia datê i czas uruchomienia silnika, uruchamia silnik poprzez ustawienie flagi isRunning.
 	 * Tworzy obiekt currentTravel klasy Travel który przechowuje dane o aktualnej podró¿y.
@@ -117,6 +117,7 @@ public class Car {
 	 * Dodaje ostatni¹ podró¿ do bazy danych.
 	 */
 	public void stop() {
+		if(!isRunning()) return;
 		if(getCurrentSpeed() >= 0) {
 			fixedSpeed = 0;
 			setRunning(false);	
@@ -155,7 +156,7 @@ public class Car {
 	public void gearUp() {
 		if(gear < 6) {
 			gear++;
-			rpms *= 0.5;
+			rpms -= 700;
 		}
 	}
 	
@@ -192,6 +193,7 @@ public class Car {
 		}
 		avgFuelConsumption = fuelConsumed * 3600 / timeInSec;
 		fuel -= fuelDiff;
+		if(fuel <= 0) stop();
 	}
 	
 	/**
@@ -396,6 +398,18 @@ public class Car {
 	}
 
 	/**
+	 * Tankuje samochód.
+	 * Dodaje paliwo o ile pojemnoœæ baku na to pozwala.
+	 * @param addedFuel wartoœæ o jak¹ chcemy zwiêszkyæ iloœæ paliwa
+	 * @return status wykonanej operacji: 1 - nieudana, 0 - udana
+	 */
+	public boolean addFuel(float addedFuel) {
+		if(fuel + addedFuel > maxFuel) return true;
+		fuel += addedFuel;
+		return false;
+	}
+	
+	/**
 	 * Ustawia œrednie zu¿ycie paliwa.
 	 * @param avgFuelConsumption œrednie zu¿ycie paliwa jako float
 	 */
@@ -588,4 +602,29 @@ public class Car {
 		return db;
 	}
 	
+	/**
+	 * Zwraca pojemnoœæ baku.
+	 * @return pojemnoœæ baku w litrach
+	 */
+	public float getMaxFuel() {
+		return maxFuel;
+	}
+	
+	/**
+	 * Zwraca tablice z prze³o¿eniami biegów.
+	 * Aby otrzymaæ konkretne prze³o¿enie odwo³ujemy siê do elementu tablicy o indeksie równym aktualnemu biegowi.
+	 * Wartoœæ w tablicy o indeksie 0 wynosi 0 - jest to bieg neutralny.
+	 * @return tablica prze³o¿eñ biegów podanych jako float
+	 */
+	public float[] getGearRatios() {
+		return gearRatios;
+	}
+	
+	/**
+	 * Ustawia prze³o¿enia biegów z tablicy see{#getGearRatios}
+	 * @param gearRatios
+	 */
+	public void setGearRatios(float[] gearRatios) {
+		this.gearRatios = gearRatios;
+	}
 }
