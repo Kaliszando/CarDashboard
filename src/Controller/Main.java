@@ -36,7 +36,9 @@ public class Main {
 			});
 		}
 		else if(args[0].compareTo("-e") == 0 || args[0].compareTo("--emergency") == 0) {
-			System.out.println("Console");
+			Car car = new Car();
+			car.start();
+			System.out.println(car.getLights().toString());
 		}
 		else {
 			System.out.println("Option '" + args[0] + "' unrecognized");

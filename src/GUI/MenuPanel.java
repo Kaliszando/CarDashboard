@@ -37,7 +37,8 @@ public class MenuPanel extends JPanel implements ActionListener {
 	private Car car;
 	private SettingsFrame settingsFrame;
 	private TravelHistoryFrame historyFrame;
-	private boolean settingsVisible, historyVisible;
+	private InfoFrame infoFrame;
+	private AboutFrame aboutFrame;
 	private JMenuBar menubar;
 	private JMenu fileMenu, viewMenu, helpMenu;
 	private JMenuItem miNew, miLoad, miSave, miExit, miCloseAll, miAbout, miInfo;
@@ -116,8 +117,6 @@ public class MenuPanel extends JPanel implements ActionListener {
 		// Settings frame
 		settingsFrame = new SettingsFrame(car, "Settings");
 		settingsFrame.setSize(settingsFrame.getSize());
-		settingsVisible = false;
-		
 		settingsFrame.addWindowListener(new WindowAdapter() {
 		  public void windowClosing(WindowEvent we) {
 			  miSettings.setSelected(false);
@@ -127,16 +126,20 @@ public class MenuPanel extends JPanel implements ActionListener {
 		// Travel history frame
 		historyFrame = new TravelHistoryFrame("Travels", car);
 		historyFrame.setSize(historyFrame.getSize());
-		historyVisible = false;
 		historyFrame.addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent we) {
 				  miTravelHistory.setSelected(false);
 			  }
 			});
 		
-		// About program frame
+		// About frame
+		aboutFrame = new AboutFrame("About program");
+		aboutFrame.setSize(aboutFrame.getSize());
 		
 		// Info frame
+		infoFrame = new InfoFrame("Info");
+		infoFrame.setSize(infoFrame.getSize());
+		
 	}
 
 	/**
@@ -201,10 +204,10 @@ public class MenuPanel extends JPanel implements ActionListener {
 			historyFrame.setVisible(false);
 		}
 		if(e.getSource() == miAbout) {
-			System.out.println("About");
+			aboutFrame.setVisible(!aboutFrame.isVisible());
 		}
 		if(e.getSource() == miInfo) {
-			System.out.println("Info");
+			infoFrame.setVisible(!infoFrame.isVisible());
 		}
 	}
 	

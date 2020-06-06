@@ -109,17 +109,21 @@ public class CarLights {
 	 * Prze³¹cznik lewego kierunkowskazu.
 	 */
 	public void toggleLeftBlinker() {
-		if(leftBlinker.isOn()) leftBlinker.turnOff();
-		else leftBlinker.turnOn();
+		boolean flag = leftBlinker.isOn();
+		if(hazardLights.isOn()) hazardLights.turnOff();
 		rightBlinker.turnOff();
+		if(flag) leftBlinker.turnOff();
+		else leftBlinker.turnOn();
 	}
 	
 	/**
 	 * Prze³¹cznik prawego kierunkowskazu.
 	 */
 	public void toggleRightBlinker() {
+		boolean flag = rightBlinker.isOn();
+		if(hazardLights.isOn()) hazardLights.turnOff();
 		leftBlinker.turnOff();
-		if(rightBlinker.isOn()) rightBlinker.turnOff();
+		if(flag) rightBlinker.turnOff();
 		else rightBlinker.turnOn();
 	}
 	
@@ -127,12 +131,8 @@ public class CarLights {
 	 * Prze³¹cznik œwiate³ awaryjnych.
 	 */
 	public void toggleHazardLights() {
-		if(hazardLights.isOn()) {
-			hazardLights.turnOff();
-		}
-		else {
-			hazardLights.turnOn();
-		}
+		if(hazardLights.isOn()) hazardLights.turnOff();
+		else hazardLights.turnOn();
 	}
 	
 	/**

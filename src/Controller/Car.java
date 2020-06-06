@@ -58,7 +58,7 @@ public class Car {
 
 	/**
 	 * Konstruktor klasy Car. Ustawia domyœlne wartoœci oraz tworzy obiekt klasy Database do którego bêd¹ póŸniej zapisywane
-	 * dane z podró¿y.
+	 * dane z podró¿y. Je¿eli istnieje plik "bac/backup.dat" z ustawieniami wczytuje go i wykorzystuje zapisane w nim dane.
 	 */
 	public Car() {
 		distance = 0;
@@ -73,7 +73,7 @@ public class Car {
 		fixedSpeed = 0;
 		rpmMax = 7000;
 		waterTemp = 0;
-		fuel = 10;
+		fuel = 0;
 		fuelConsumed = 0;
 		lights = new CarLights();
 		timeFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -112,9 +112,8 @@ public class Car {
 	}
 	
 	/**
-	 * Wy³¹cza silnik, zapisuje przebyty dystans, œrednie zu¿ycie paliwa
-	 * oraz datê i czas zatrzymania silnika do obiektu currentTravel. 
-	 * Dodaje ostatni¹ podró¿ do bazy danych.
+	 * Wy³¹cza silnik, zapisuje przebyty dystans, œrednie zu¿ycie paliwa oraz datê i czas zatrzymania silnika do obiektu currentTravel. 
+	 * Dodaje ostatni¹ podró¿ do bazy danych zapisuje dane do obiektu ustawieñ i zapisuje te ustawienia do pliku "backup.dat".
 	 */
 	public void stop() {
 		if(!isRunning()) return;
@@ -172,7 +171,11 @@ public class Car {
 	}
 	
 	/**
-	 * Aktualizuje wartoœci komputera pok³adowego
+	 * Aktualizuje wartoœci komputera pok³adowego.
+	 * Zmienia wartoœci prêdkoœci maksymalnej, oblicza przebyty dystans w ci¹gu jednej sekundy,
+	 * zwiêksza liczniki samochodu zgodnie z przebytym dystansem, na podstawie dystansu podró¿y i czasu trwania oblicza œredni¹ prêdkoœæ,
+	 * zwiêksza odpowiednio temperaturê p³ynu ch³odniczego, w zale¿noœci od iloœci obrotów na min. oblicza iloœæ zu¿ytego paliwa.
+	 * Pod koniec aktualizuje stan paliwa i œrednie spalanie.
 	 */
 	public void update() {
 		if(currentSpeed > maxSpeed && isRunning) maxSpeed = currentSpeed;
@@ -508,7 +511,7 @@ public class Car {
 
 	/**
 	 * Ustawia czas startu silnika.
-	 * @param startTime czas poczÄ…tkowy
+	 * @param startTime czas pocz¹tkowy
 	 */
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
@@ -621,8 +624,8 @@ public class Car {
 	}
 	
 	/**
-	 * Ustawia prze³o¿enia biegów z tablicy see{#getGearRatios}
-	 * @param gearRatios
+	 * Ustawia prze³o¿enia biegów z tablicy {@link #getGearRatios()}
+	 * @param gearRatios tablica z prze³o¿eniami biegów
 	 */
 	public void setGearRatios(float[] gearRatios) {
 		this.gearRatios = gearRatios;

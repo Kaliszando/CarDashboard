@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -178,6 +180,5 @@ public class DashboardPanel extends JPanel {
 		}
 		
 		repaint();
-	}
-	
+	}	
 }

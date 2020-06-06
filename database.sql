@@ -17,7 +17,7 @@ SELECT * FROM Travels
 WHERE distance='0' OR avgFuelConsumption='0';
 
 DELETE FROM Travels WHERE distance = 0;
-DELETE FROM Travels WHERE id = 24;
+DELETE FROM Travels WHERE id = 92;
 DELETE FROM Travels WHERE mileageTotal = 0;
 DELETE FROM Travels WHERE avgFuelConsumption = 0;
 

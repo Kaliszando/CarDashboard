@@ -24,6 +24,9 @@
 .project
 .settings
 
+# Settings
+.xml
+
 # Javadoc
 /doc/
 
