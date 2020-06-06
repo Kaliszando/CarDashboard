@@ -32,6 +32,7 @@ public class SettingsFrame extends JFrame implements ActionListener {
 	
 	/**
 	 * Tworzy okno ustawieñ.
+	 * @param car obiekt pojazdu dla którego zmieniamy ustawienia
 	 * @param title tytu³ okienka dialogowego
 	 */
 	public SettingsFrame(Car car, String title) {
@@ -39,6 +40,7 @@ public class SettingsFrame extends JFrame implements ActionListener {
 		this.car = car;
 		setLayout(new GridLayout(6,1));
 		setSize(360, 360);
+		setResizable(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2 - this.getWidth()/2, dim.height/2 - this.getHeight()/2);
 		

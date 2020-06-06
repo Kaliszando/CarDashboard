@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
@@ -15,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,7 +31,7 @@ import Controller.Car;
  * @author Kamil Rojszczak
  * 
  */
-public class ControlsPanel extends JPanel implements ActionListener, ChangeListener {
+public class ControlsPanel extends JPanel implements ActionListener, ChangeListener, KeyListener {
 	
 	private JButton JBgearUp, JBgearDown, JBstartCar, JBstopCar, JBleftBlinker, JBrightBlinker;
 	private JLabel JLstartStop, JLgears, JLblinkers, JLlights;
@@ -56,18 +60,23 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
 	private JLabel JLdistanceVal;
 	private JLabel JLmaxSpeed;
 	private JLabel JLmaxSpeedVal;
+	private JButton keySteer;
 	
 	/**
-	 * Konstruktor odpowiada za stworzenie i wyœwietlenie na panelu, elementów takich jak napisy, 
-	 * suwaki, przyciski itd.
+	 * Konstruktor odpowiada za stworzenie i wyœwietlenie na panelu, elementów takich jak napisy, suwaki, przyciski itd.
 	 * @param car obiekt klasy Car
 	 */
 	public ControlsPanel(Car car) {
 		this.car = car;
 		setLayout(null);
-		setPreferredSize(new Dimension(1000, 200));
+		setPreferredSize(new Dimension(1000, 240));
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
-	
+		
+		// Key actions
+		keySteer = new JButton("Keyboard steering");
+		keySteer.addKeyListener(this);
+		keySteer.setBounds(0, 200, 1000, 40);
+		add(keySteer);
 		
 		// Slider
 		JSthrottle = new JSlider(JSlider.VERTICAL, 0, 200, 0);
@@ -351,6 +360,59 @@ public class ControlsPanel extends JPanel implements ActionListener, ChangeListe
         		car.setFixedSpeed(speedVal);
         } 
 	}
-	
 
+	/**
+	 * Wykonuje instrukcjê przy wciœniêciu przycisku.
+	 */
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+		if(keyCode == KeyEvent.VK_UP) JSthrottle.setValue(JSthrottle.getValue() + 10);
+		if(keyCode == KeyEvent.VK_DOWN) JSthrottle.setValue(JSthrottle.getValue() - 10);
+		if(keyCode == KeyEvent.VK_LEFT) JBleftBlinker.doClick();
+		if(keyCode == KeyEvent.VK_RIGHT) JBrightBlinker.doClick();
+		if(keyCode == KeyEvent.VK_1) JBstartCar.doClick();
+		if(keyCode == KeyEvent.VK_2) JBstopCar.doClick();
+		if(keyCode == KeyEvent.VK_Q || keyCode == KeyEvent.VK_E) JBhighBeams.doClick();
+		if(keyCode == KeyEvent.VK_W) JBgearUp.doClick();
+		if(keyCode == KeyEvent.VK_S) JBgearDown.doClick();
+		if(keyCode == KeyEvent.VK_H) JBhazardLights.doClick();
+		if(keyCode == KeyEvent.VK_R) car.getLights().toggleRearFogLigths();
+		if(keyCode == KeyEvent.VK_F) car.getLights().toggleFrontFogLigths();
+		if(keyCode == KeyEvent.VK_L) {
+			if(JRBlightsOff.isSelected() || JRBparkingLights.isSelected()) {
+				JRBlowBeamLights.setSelected(true);
+				JRBlowBeamLights.doClick();
+			}
+			else {
+				JRBlightsOff.setSelected(true);
+				JRBlightsOff.doClick();
+			}
+		}
+		if(keyCode == KeyEvent.VK_P) {
+			if(JRBlightsOff.isSelected() || JRBlowBeamLights.isSelected()) {
+				JRBparkingLights.setSelected(true);
+				JRBparkingLights.doClick();
+			}
+			else {
+				JRBlightsOff.setSelected(true);
+				JRBlightsOff.doClick();
+			}
+		}
+	}
+
+	/**
+	 * Wykonuje instrukcje przy zwolnieniu przycisku.
+	 */
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_E) JBhighBeams.doClick();
+	}
+
+	/**
+	 * Wykonuje instrukcje przy wciœniêciu klawisza który mo¿a reprezentowaæ jako zmienn¹ char.
+	 */
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
 }
