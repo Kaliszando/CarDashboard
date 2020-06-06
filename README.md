@@ -1,6 +1,6 @@
 # CarDashboard
 Project for component programming classes
 
-Additinal libs:
+Additional libs:
 - XStream
 - JDBC + driver for SQL Server
